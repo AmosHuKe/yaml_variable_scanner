@@ -1,0 +1,11 @@
+yaml_variable_scanner:
+  yamlFilePath:
+    - "test/case1/site.yaml"
+  ignoreYamlFilePath:
+  ignoreYamlKey:
+    - "repo.reg-exp$"
+  checkFilePath:
+    - "test/case1/**/*.md"
+  ignoreFilePath:
+    - "test/case1/**/3.md"
+  

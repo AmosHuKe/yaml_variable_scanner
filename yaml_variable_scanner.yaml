@@ -1,0 +1,21 @@
+yaml_variable_scanner:
+
+  # Glob Syntax
+  yamlFilePath:
+    - "test/*.yaml"
+
+  # Glob Syntax
+  ignoreYamlFilePath:
+
+  # RegExp Syntax
+  ignoreYamlKey:
+    - "^description$"
+  
+  # Glob Syntax
+  checkFilePath:
+    - "test/**/*.md"
+
+  # Glob Syntax
+  ignoreFilePath:
+    - "test/content/**.md"
+  

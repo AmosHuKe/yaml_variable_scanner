@@ -1,0 +1,1 @@
+dart run example check
