@@ -589,7 +589,8 @@ lets you specify the code that the zone executes.
 In the future, zones might provide a simpler alternative
 for the common case of sandwiching zone code:
 an onEnter/onLeave API.
-See [issue 17532](https://github.com/dart-lang/sdk/issues/17532)
+See [issue 17532]({{site.repo.dart.org}}/sdk/issues/17532)
+[issue 1753333]({{ site.repo.dart.org }}/sdk/issues/17532)
 for details.
 :::
 

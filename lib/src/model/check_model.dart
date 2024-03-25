@@ -3,13 +3,17 @@ class CheckResult {
     required this.filePath,
     required this.yamlKey,
     required this.yamlValue,
-    required this.totalMatches,
+    required this.matchValue,
   });
 
   final String filePath;
   final String yamlKey;
   final String yamlValue;
-  final int totalMatches;
+  final Map<String, int> matchValue;
+
+  @override
+  String toString() =>
+      '$runtimeType(filePath: $filePath, yamlKey: $yamlKey, yamlValue: $yamlValue, matchValue: $matchValue)';
 
   @override
   bool operator ==(Object other) {
@@ -23,7 +27,7 @@ class CheckResult {
         other.filePath == filePath &&
         other.yamlKey == yamlKey &&
         other.yamlValue == yamlValue &&
-        other.totalMatches == totalMatches;
+        other.matchValue.toString().hashCode == matchValue.toString().hashCode;
   }
 
   @override
@@ -31,7 +35,7 @@ class CheckResult {
         filePath.hashCode,
         yamlKey.hashCode,
         yamlValue.hashCode,
-        totalMatches.hashCode,
+        matchValue.toString().hashCode,
       );
 }
 
@@ -40,6 +44,6 @@ class YamlCheckResult extends CheckResult {
     required super.filePath,
     required super.yamlKey,
     required super.yamlValue,
-    required super.totalMatches,
+    required super.matchValue,
   });
 }

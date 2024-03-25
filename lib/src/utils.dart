@@ -3,7 +3,7 @@ extension StringExtensions on String {
   ///
   /// e.g. ```[^0-9]+``` -> ```\[\^0-9\]\+```
   String get escapedPatternValue => replaceAllMapped(
-        RegExp(r'[\\^$.*+?()\[\]{}|]'),
+        RegExp(r'[\\^$.*+?()\[\]{}|=]'),
         (match) => '\\${match.group(0)}',
       );
 }

@@ -5,8 +5,9 @@ import 'package:yaml/yaml.dart';
 import 'file.dart';
 import 'utils.dart';
 
-import 'model/check_model.dart';
 import 'model/config_model.dart';
+import 'model/check_model.dart';
+import 'model/yaml_model.dart';
 
 class YamlVariableScanner {
   const YamlVariableScanner._();
@@ -15,10 +16,13 @@ class YamlVariableScanner {
   ///
   /// - [configPath] `yaml_variable_scanner.yaml` config file path
   /// - [stdout] Stdout
+  /// - [prefix] Variable prefixes for deep variable checking.
+  ///            e.g. `(yamlKey) => 'site.$yamlKey'` -> `site.aa`
   /// - [enablePrint] Console Print
   static Future<List<CheckResult>> run(
     String configPath,
     Stdout stdout, {
+    PrefixFunction? prefix,
     enablePrint = true,
   }) async {
     void print(Object message) => stdout.writeln(message);
@@ -30,11 +34,12 @@ class YamlVariableScanner {
         await ConfigLoad(configPath).getConfig();
 
     /// Get YAML variables
-    final Map<String, String> yamlConfigAll = await YamlLoad(
+    final List<YamlVariable> yamlVariableAll = await YamlLoad(
       scannerConfig.yamlFilePath ?? [],
       ignoreGlobPathList: scannerConfig.ignoreYamlFilePath ?? [],
       ignoreYamlKeyList: scannerConfig.ignoreYamlKey ?? [],
-    ).getConfig();
+      prefix: prefix,
+    ).getVariable();
 
     /// Get directory files to scan
     final List<String> filePathAll = FilePath(
@@ -43,49 +48,49 @@ class YamlVariableScanner {
     ).getPath();
 
     /// YAML all results
-    final Map<String, YamlCheckResult> yamlCheckResultAll = {};
+    // final Map<String, YamlCheckResult> yamlCheckResultAll = {};
 
     /// Start check
     for (final String filePath in filePathAll) {
       final List<CheckResult> checkResultAll =
-          await VariableCheck(yamlConfigAll, filePath).run();
+          await VariableCheck(yamlVariableAll, filePath).run();
 
       if (checkResultAll.isNotEmpty) {
         checkResultList.addAll(checkResultAll);
-        for (final CheckResult checkResult in checkResultAll) {
-          yamlCheckResultAll.addAll({
-            checkResult.yamlKey: YamlCheckResult(
-              filePath: '',
-              yamlKey: checkResult.yamlKey,
-              yamlValue: checkResult.yamlValue,
-              totalMatches: checkResult.totalMatches +
-                  (yamlCheckResultAll[checkResult.yamlKey]?.totalMatches ?? 0),
-            ),
-          });
-          if (enablePrint) {
-            print('''
-[File Path]: ${checkResult.filePath}
-  ├── [YAML Key]: ${checkResult.yamlKey}
-  ├── [YAML Value]: ${checkResult.yamlValue}
-  └── [Total Matches]: ${checkResult.totalMatches}''');
+
+        if (enablePrint) {
+          print('');
+          for (final CheckResult checkResult in checkResultAll) {
+            print('[File Path]: ${checkResult.filePath}');
+            print('├── [YAML Key]: ${checkResult.yamlKey}');
+            print('└── [YAML Value]: ${checkResult.yamlValue}');
+            for (final matchValue in checkResult.matchValue.entries) {
+              print('    ├── [Match Value]: ${matchValue.key}');
+              print('    └── [Total Matches]: ${matchValue.value}');
+            }
             print('');
           }
         }
       }
     }
 
-    if (enablePrint && yamlCheckResultAll.isNotEmpty) {
-      print('------------------------------------------------');
-      print('[YAML Total Matches]:');
-      for (final yamlCheckResult in yamlCheckResultAll.entries) {
-        print('''
-  │
-  ├── [YAML Key]: ${yamlCheckResult.key}
-  │   ├── [YAML Value]: ${yamlCheckResult.value.yamlValue}
-  │   └── [Total]: ${yamlCheckResult.value.totalMatches}''');
-      }
-      print('------------------------------------------------');
-    }
+    // if (enablePrint && yamlCheckResultAll.isNotEmpty) {
+    //   print('------------------------------------------------');
+    //   print('[YAML Total Matches]:');
+    //   for (final yamlCheckResult in yamlCheckResultAll.entries) {
+    //     print('''
+    // │
+    // ├── [YAML Key]: ${yamlCheckResult.key}
+    // └── [YAML Value]: ${yamlCheckResult.value.yamlValue}''');
+
+    //     for (final matchValue in yamlCheckResult.value.matchValue.entries) {
+    //       print('''
+    //     ├── [Match Value]: ${matchValue.key}
+    //     └── [Total Matches]: ${matchValue.value}''');
+    //     }
+    //   }
+    //   print('------------------------------------------------');
+    // }
 
     return checkResultList;
   }
@@ -130,23 +135,34 @@ class ConfigLoad with FileLoad {
   }
 }
 
+typedef PrefixFunction = String Function(String yamlKey);
+
 class YamlLoad extends FilePath with FileLoad {
   /// Load YAML variables
   ///
   /// - [globPathList] YAML paths (Glob syntax)
   /// - [ignoreGlobPathList] Ignore YAML paths (Glob syntax)
   /// - [ignoreYamlKeyList] Ignore YAML keys (RegExp syntax)
+  /// - [prefix] Variable prefixes for deep variable checking.
+  ///            e.g. `(yamlKey) => 'site.$yamlKey'` -> `site.aa`
   const YamlLoad(
     super.globPathList, {
     super.ignoreGlobPathList,
     this.ignoreYamlKeyList = const [],
+    this.prefix,
   });
 
   /// Ignore YAML keys (RegExp syntax)
   final List<String> ignoreYamlKeyList;
 
-  Future<Map<String, String>> getConfig() async {
+  /// Variable prefixes for deep variable checking.
+  /// e.g. `(yamlKey) => 'site.$yamlKey'` -> `site.aa`
+  final PrefixFunction? prefix;
+
+  Future<List<YamlVariable>> getVariable() async {
+    final List<YamlVariable> yamlVariableAll = [];
     final Map<String, String> yamlAll = {};
+
     final List<String> pathList = getPath();
     for (final String path in pathList) {
       final String lines = await getFileContent(path);
@@ -157,15 +173,43 @@ class YamlLoad extends FilePath with FileLoad {
 
     /// Ignore YAML keys
     for (final String ignoreYamlKey in ignoreYamlKeyList) {
-      final RegExp regExp = RegExp(
-        ignoreYamlKey,
-        multiLine: true,
-        dotAll: true,
-      );
+      final RegExp regExp = RegExp(ignoreYamlKey);
       yamlAll.removeWhere((key, value) => regExp.hasMatch(key));
     }
 
-    return yamlAll;
+    /// Deep variable
+    for (final yamlVariable in yamlAll.entries) {
+      final List<String> yamlMatchAll = [];
+
+      for (final yamlMatch in yamlAll.entries) {
+        if (yamlVariable.key == yamlMatch.key ||
+            yamlVariable.value == yamlMatch.value) continue;
+
+        final String yamlMatchValue = yamlMatch.value.escapedPatternValue;
+        final RegExp regExp = RegExp(r'' + yamlMatchValue);
+        final bool hasMatch = regExp.hasMatch(yamlVariable.value);
+        if (hasMatch) {
+          final String prefixValue =
+              prefix != null ? prefix!(yamlMatch.key) : yamlMatch.key;
+          yamlMatchAll.add(
+            yamlVariable.value.escapedPatternValue.replaceAll(
+              regExp.pattern,
+              '{{\\s*${prefixValue.escapedPatternValue}.*?}}',
+            ),
+          );
+        }
+      }
+
+      yamlVariableAll.add(
+        YamlVariable(
+          key: yamlVariable.key,
+          value: yamlVariable.value,
+          matchValue: [yamlVariable.value.escapedPatternValue, ...yamlMatchAll],
+        ),
+      );
+    }
+
+    return yamlVariableAll;
   }
 
   /// Flatten YAML collection result
@@ -232,15 +276,15 @@ class YamlLoad extends FilePath with FileLoad {
 class VariableCheck with FileLoad {
   /// Check file contents with YAML variables
   ///
-  /// - [yamlConfig] Flattened YAML variables
+  /// - [yamlVariable] Flattened YAML variables
   /// - [filePath] File path
   VariableCheck(
-    this.yamlConfig,
+    this.yamlVariable,
     this.filePath,
   );
 
   /// Flattened YAML variables
-  final Map<String, String> yamlConfig;
+  final List<YamlVariable> yamlVariable;
 
   /// File path
   final String filePath;
@@ -248,22 +292,28 @@ class VariableCheck with FileLoad {
   Future<List<CheckResult>> run() async {
     final List<CheckResult> checkResultAll = [];
 
-    for (final MapEntry<String, String> matchConfig in yamlConfig.entries) {
+    for (final YamlVariable matchVariable in yamlVariable) {
       final String fileContent = await getFileContent(filePath);
-      final String escapedPatternValue = matchConfig.value.escapedPatternValue;
-      final RegExp regExp = RegExp(
-        r'\\?' + escapedPatternValue,
-        multiLine: true,
-        dotAll: true,
-      );
-      final Iterable<RegExpMatch> matches = regExp.allMatches(fileContent);
-      if (matches.isNotEmpty) {
+
+      final Map<String, int> matchValueMap = {};
+      for (final String matchValue in matchVariable.matchValue) {
+        final RegExp regExp = RegExp(r'' + matchValue);
+        final Iterable<RegExpMatch> matches = regExp.allMatches(fileContent);
+        if (matches.isNotEmpty) {
+          for (final RegExpMatch match in matches) {
+            matchValueMap.addAll({
+              match.group(0)!: (matchValueMap[match.group(0)] ?? 0) + 1,
+            });
+          }
+        }
+      }
+      if (matchValueMap.isNotEmpty) {
         checkResultAll.add(
           CheckResult(
             filePath: filePath,
-            yamlKey: matchConfig.key,
-            yamlValue: matchConfig.value,
-            totalMatches: matches.length,
+            yamlKey: matchVariable.key,
+            yamlValue: matchVariable.value,
+            matchValue: matchValueMap,
           ),
         );
       }

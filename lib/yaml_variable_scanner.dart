@@ -4,5 +4,8 @@ export 'src/yaml_variable_scanner.dart';
 
 export 'src/file.dart';
 
+export 'src/utils.dart';
+
 export 'src/model/check_model.dart';
 export 'src/model/config_model.dart';
+export 'src/model/yaml_model.dart';
