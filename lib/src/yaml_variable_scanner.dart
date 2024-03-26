@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:console/console.dart';
+
 import 'file.dart';
 import 'config_load.dart';
 import 'yaml_load.dart';
@@ -29,6 +31,10 @@ class YamlVariableScanner {
 
     final List<CheckResult> checkResultList = [];
 
+    Console.init();
+    final ProgressBar consoleProgressBar = ProgressBar();
+    final LoadingBar consoleLoadingBar = LoadingBar()..start();
+
     /// Get configuration
     final YamlVariableScannerConfig scannerConfig =
         await ConfigLoad(configPath).getConfig();
@@ -51,25 +57,20 @@ class YamlVariableScanner {
     // final Map<String, YamlCheckResult> yamlCheckResultAll = {};
 
     /// Start check
-    for (final String filePath in filePathAll) {
+    for (final filePath in filePathAll.asMap().entries) {
       final List<CheckResult> checkResultAll =
-          await VariableCheck(yamlVariableAll, filePath).run();
+          await VariableCheck(yamlVariableAll, filePath.value).run();
 
       if (checkResultAll.isNotEmpty) {
         checkResultList.addAll(checkResultAll);
 
+        Console.eraseLine(1);
         if (enablePrint) {
-          for (final CheckResult checkResult in checkResultAll) {
-            print('[File Path]: ${checkResult.filePath}');
-            print('├── [YAML Key]: ${checkResult.yamlKey}');
-            print('└── [YAML Value]: ${checkResult.yamlValue}');
-            for (final matchValue in checkResult.matchValue.entries) {
-              print('    ├── [Match Value]: ${matchValue.key}');
-              print('    └── [Total Matches]: ${matchValue.value}');
-            }
-            print('');
-          }
+          _consolePrintCheckResult(checkResultAll);
         }
+        consoleProgressBar.update(
+          (filePath.key / (filePathAll.length - 1) * 100).toInt(),
+        );
       }
     }
 
@@ -91,6 +92,53 @@ class YamlVariableScanner {
     //   print('------------------------------------------------');
     // }
 
+    consoleLoadingBar.stop();
     return checkResultList;
+  }
+
+  /// Console Print Results
+  static void _consolePrintCheckResult(List<CheckResult> checkResultAll) {
+    Console.init();
+    for (final CheckResult checkResult in checkResultAll) {
+      print('');
+      TextPen()
+          .lightMagenta()
+          .text('📂 [File Path]: ')
+          .normal()
+          .text(checkResult.filePath)
+          .print();
+      TextPen()
+          .gray()
+          .text('├── ')
+          .normal()
+          .text('🔍 [YAML Key]: ')
+          .normal()
+          .text(checkResult.yamlKey)
+          .print();
+      TextPen()
+          .gray()
+          .text('└── ')
+          .normal()
+          .text('🔍 [YAML Value]: ')
+          .normal()
+          .text(checkResult.yamlValue)
+          .print();
+      for (final matchValue in checkResult.matchValue.entries) {
+        TextPen().gray().text('    │   ').print();
+        TextPen()
+            .gray()
+            .text('    └── ')
+            .normal()
+            .text('📄 [Match content ')
+            .blue()
+            .text('(total ${matchValue.value})')
+            .normal()
+            .text(']: ')
+            .normal()
+            .text(matchValue.key)
+            .print();
+      }
+      print('');
+    }
   }
 }
