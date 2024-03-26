@@ -122,20 +122,13 @@ class YamlLoad extends FilePath with FileLoad {
     switch (collections) {
       case Map _:
         for (final entry in collections.entries) {
-          _flattenCollection(
-            entry.value,
-            '$prefix${entry.key}.',
-            result,
-          );
+          _flattenCollection(entry.value, '$prefix${entry.key}.', result);
         }
         break;
       case List _:
         for (int i = 0; i < collections.length; i++) {
-          _flattenCollection(
-            collections[i],
-            '$prefix[${i.toString()}].',
-            result,
-          );
+          final listPrefix = '${prefix.replaceFirst(RegExp(r'\.$'), '')}[$i].';
+          _flattenCollection(collections[i], listPrefix, result);
         }
         break;
       default:
