@@ -59,7 +59,6 @@ class YamlVariableScanner {
         checkResultList.addAll(checkResultAll);
 
         if (enablePrint) {
-          print('');
           for (final CheckResult checkResult in checkResultAll) {
             print('[File Path]: ${checkResult.filePath}');
             print('├── [YAML Key]: ${checkResult.yamlKey}');

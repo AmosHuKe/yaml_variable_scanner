@@ -132,7 +132,10 @@ class YamlLoad extends FilePath with FileLoad {
         }
         break;
       default:
-        result[prefix.substring(0, prefix.length - 1)] = collections.toString();
+        if (collections != null) {
+          result[prefix.substring(0, prefix.length - 1)] =
+              collections.toString();
+        }
         break;
     }
   }
