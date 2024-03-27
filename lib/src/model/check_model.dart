@@ -1,3 +1,35 @@
+class MatchPosition {
+  const MatchPosition({
+    required this.line,
+    required this.column,
+  });
+
+  final int line;
+  final int column;
+
+  @override
+  String toString() => '$runtimeType(line: $line, column: $column)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is MatchPosition &&
+        other.line == line &&
+        other.column == column;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        line.hashCode,
+        column.hashCode,
+      );
+}
+
 class CheckResult {
   const CheckResult({
     required this.filePath,
@@ -9,7 +41,7 @@ class CheckResult {
   final String filePath;
   final String yamlKey;
   final String yamlValue;
-  final Map<String, int> matchValue;
+  final Map<String, List<MatchPosition>> matchValue;
 
   @override
   String toString() =>
@@ -37,13 +69,4 @@ class CheckResult {
         yamlValue.hashCode,
         matchValue.toString().hashCode,
       );
-}
-
-class YamlCheckResult extends CheckResult {
-  YamlCheckResult({
-    required super.filePath,
-    required super.yamlKey,
-    required super.yamlValue,
-    required super.matchValue,
-  });
 }

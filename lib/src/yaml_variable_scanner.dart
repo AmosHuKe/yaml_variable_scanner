@@ -57,9 +57,12 @@ class YamlVariableScanner {
     // final Map<String, YamlCheckResult> yamlCheckResultAll = {};
 
     /// Start check
-    for (final filePath in filePathAll.asMap().entries) {
+    for (final MapEntry<int, String>(
+          key: index,
+          value: filePath,
+        ) in filePathAll.asMap().entries) {
       final List<CheckResult> checkResultAll =
-          await VariableCheck(yamlVariableAll, filePath.value).run();
+          await VariableCheck(yamlVariableAll, filePath).run();
 
       if (checkResultAll.isNotEmpty) {
         checkResultList.addAll(checkResultAll);
@@ -69,7 +72,7 @@ class YamlVariableScanner {
           _consolePrintCheckResult(checkResultAll);
         }
         consoleProgressBar.update(
-          (filePath.key / (filePathAll.length - 1) * 100).toInt(),
+          (index / (filePathAll.length - 1) * 100).toInt(),
         );
       }
     }
@@ -123,20 +126,71 @@ class YamlVariableScanner {
           .normal()
           .text(checkResult.yamlValue)
           .print();
+
       for (final matchValue in checkResult.matchValue.entries) {
+        bool isMatchValueLast = false;
+        if (checkResult.matchValue.entries.last.key == matchValue.key) {
+          isMatchValueLast = true;
+        }
+
         TextPen().gray().text('    │   ').print();
-        TextPen()
-            .gray()
-            .text('    └── ')
+        final TextPen matchValuePen = TextPen();
+        matchValuePen.gray();
+        switch ([isMatchValueLast]) {
+          case [false]:
+            matchValuePen.text('    ├── ');
+            break;
+          case [true]:
+            matchValuePen.text('    └── ');
+            break;
+        }
+        matchValuePen
             .normal()
             .text('📄 [Match content ')
             .blue()
-            .text('(total ${matchValue.value})')
+            .text('(total ${matchValue.value.length})')
             .normal()
             .text(']: ')
             .normal()
             .text(matchValue.key)
             .print();
+
+        for (final MapEntry<int, MatchPosition>(
+              key: index,
+              value: matchPosition,
+            ) in matchValue.value.asMap().entries) {
+          bool isMatchPositionLast = false;
+          if (index + 1 == matchValue.value.length) {
+            isMatchPositionLast = true;
+          }
+
+          final TextPen matchPositionPen = TextPen();
+          matchPositionPen.gray();
+          switch ([isMatchValueLast, isMatchPositionLast]) {
+            case [false, true]:
+              matchPositionPen.text('    │   └── ');
+              break;
+            case [false, false]:
+              matchPositionPen.text('    │   ├── ');
+              break;
+            case [true, false]:
+              matchPositionPen.text('        ├── ');
+              break;
+            case [true, true]:
+              matchPositionPen.text('        └── ');
+              break;
+            default:
+              matchPositionPen.text('        └── ');
+              break;
+          }
+
+          matchPositionPen
+              .normal()
+              .text(checkResult.filePath)
+              .blue()
+              .text(':${matchPosition.line}:${matchPosition.column}')
+              .print();
+        }
       }
       print('');
     }

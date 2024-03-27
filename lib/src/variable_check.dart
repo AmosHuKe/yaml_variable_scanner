@@ -25,14 +25,22 @@ class VariableCheck with FileLoad {
     for (final YamlVariable matchVariable in yamlVariable) {
       final String fileContent = await getFileContent(filePath);
 
-      final Map<String, int> matchValueMap = {};
+      final Map<String, List<MatchPosition>> matchValueMap = {};
       for (final String matchValue in matchVariable.matchValue) {
         final RegExp regExp = RegExp(r'' + matchValue);
         final Iterable<RegExpMatch> matches = regExp.allMatches(fileContent);
         if (matches.isNotEmpty) {
           for (final RegExpMatch match in matches) {
+            final String matchContent = match.group(0)!;
+            final MatchPosition matchPosition = _matchPosition(
+              fileContent,
+              match.start,
+            );
             matchValueMap.addAll({
-              match.group(0)!: (matchValueMap[match.group(0)] ?? 0) + 1,
+              matchContent: [
+                ...(matchValueMap[matchContent] ?? []),
+                matchPosition,
+              ],
             });
           }
         }
@@ -49,5 +57,22 @@ class VariableCheck with FileLoad {
       }
     }
     return checkResultAll;
+  }
+
+  MatchPosition _matchPosition(String text, int matchIndex) {
+    final List<String> lines = text.split('\n');
+    int lineNumber = 0;
+    int currentIndex = 0;
+    for (final String line in lines) {
+      currentIndex += line.length + 1;
+      if (currentIndex > matchIndex) break;
+      lineNumber++;
+    }
+    final int line = lineNumber + 1;
+
+    final int lineStartIndex = text.lastIndexOf('\n', matchIndex) + 1;
+    final int column = matchIndex - lineStartIndex + 1;
+
+    return MatchPosition(line: line, column: column);
   }
 }
