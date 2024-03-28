@@ -4,7 +4,13 @@ class YamlVariable {
     required this.value,
     required this.matchValue,
   });
+
+  /// YAML Key
+  ///
+  /// e.g. aa.bb.cc, aa.bb[0], aa.bb[1]
   final String key;
+
+  /// YAML Value
   final String value;
 
   /// RegExp Syntax

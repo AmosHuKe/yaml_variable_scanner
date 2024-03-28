@@ -66,7 +66,7 @@ class YamlLoad extends FilePath with FileLoad {
           yamlMatchAll.add(
             yamlVariable.value.escapedPatternValue.replaceAll(
               regExp.pattern,
-              '{{\\s*${prefixValue.escapedPatternValue}.*?}}',
+              r'{{\s*' + prefixValue.escapedPatternValue + r'.*?}}',
             ),
           );
         }

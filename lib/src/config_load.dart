@@ -29,16 +29,22 @@ class ConfigLoad with FileLoad {
     final List<String>? checkFilePath = (yamlConfig['checkFilePath'] as List?)
         ?.map((value) => value.toString())
         .toList();
-    final List<String>? ignoreFilePath = (yamlConfig['ignoreFilePath'] as List?)
-        ?.map((value) => value.toString())
-        .toList();
+    final List<String>? ignoreCheckFilePath =
+        (yamlConfig['ignoreCheckFilePath'] as List?)
+            ?.map((value) => value.toString())
+            .toList();
+    final List<String>? ignoreCheckText =
+        (yamlConfig['ignoreCheckText'] as List?)
+            ?.map((value) => value.toString())
+            .toList();
 
     return YamlVariableScannerConfig(
       yamlFilePath: yamlFilePath,
       ignoreYamlFilePath: ignoreYamlFilePath,
       ignoreYamlKey: ignoreYamlKey,
       checkFilePath: checkFilePath,
-      ignoreFilePath: ignoreFilePath,
+      ignoreCheckFilePath: ignoreCheckFilePath,
+      ignoreCheckText: ignoreCheckText,
     );
   }
 }

@@ -6,6 +6,16 @@ yaml_variable_scanner:
     - "repo.reg-exp$"
   checkFilePath:
     - "test/case1/**/*.md"
-  ignoreFilePath:
+  ignoreCheckFilePath:
     - "test/case1/**/3.md"
+  ignoreCheckText:
+    # --- 
+    # xxx
+    # ---
+    - ^---([\s\S]*?)---$
+
+    # {% comment %}
+    #   xxx
+    # {% endcomment %}
+    - ^{%\s*comment\s*%}([\s\S]*?){%\s*endcomment\s*%}$
   

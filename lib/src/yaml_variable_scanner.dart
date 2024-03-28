@@ -50,7 +50,7 @@ class YamlVariableScanner {
     /// Get directory files to scan
     final List<String> filePathAll = FilePath(
       scannerConfig.checkFilePath ?? [],
-      ignoreGlobPathList: scannerConfig.ignoreFilePath ?? [],
+      ignoreGlobPathList: scannerConfig.ignoreCheckFilePath ?? [],
     ).getPath();
 
     /// YAML all results
@@ -61,8 +61,11 @@ class YamlVariableScanner {
           key: index,
           value: filePath,
         ) in filePathAll.asMap().entries) {
-      final List<CheckResult> checkResultAll =
-          await VariableCheck(yamlVariableAll, filePath).run();
+      final List<CheckResult> checkResultAll = await VariableCheck(
+        yamlVariableAll,
+        filePath,
+        ignoreCheckText: scannerConfig.ignoreCheckText ?? [],
+      ).run();
 
       if (checkResultAll.isNotEmpty) {
         checkResultList.addAll(checkResultAll);
@@ -146,7 +149,7 @@ class YamlVariableScanner {
         }
         matchValuePen
             .normal()
-            .text('📄 [Match content ')
+            .text('📄 [Match Content ')
             .blue()
             .text('(total ${matchValue.value.length})')
             .normal()

@@ -1,20 +1,20 @@
 yaml_variable_scanner:
-
-  # Glob Syntax
   yamlFilePath:
     - "test/*.yaml"
-
-  # Glob Syntax
   ignoreYamlFilePath:
-
-  # RegExp Syntax
   ignoreYamlKey:
-  
-  # Glob Syntax
   checkFilePath:
     - "test/**/*.md"
-
-  # Glob Syntax
-  ignoreFilePath:
+  ignoreCheckFilePath:
     # - "test/content/**.md"
+  ignoreCheckText:
+    # --- 
+    # xxx
+    # ---
+    - ^---([\s\S]*?)---$
+
+    # {% comment %}
+    #   xxx
+    # {% endcomment %}
+    - ^{%\s*comment\s*%}([\s\S]*?){%\s*endcomment\s*%}$
   

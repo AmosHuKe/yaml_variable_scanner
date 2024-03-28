@@ -67,7 +67,7 @@ void main() {
               'Dart is a client-optimized language for developing fast apps on any platform.',
           matchValue: {
             'Dart is a client-optimized language for developing fast apps on any platform.':
-                [MatchPosition(line: 1, column: 5)],
+                [MatchPosition(line: 5, column: 5)],
           },
         ),
         CheckResult(
@@ -75,7 +75,7 @@ void main() {
           yamlKey: 'repo.dart.lang',
           yamlValue: '<p>123</p>\n<p>456</p>\n',
           matchValue: {
-            '<p>123</p>\n<p>456</p>\n': [MatchPosition(line: 6, column: 1)],
+            '<p>123</p>\n<p>456</p>\n': [MatchPosition(line: 16, column: 1)],
           },
         ),
         CheckResult(
@@ -83,7 +83,7 @@ void main() {
           yamlKey: 'repo.dart.reg-exp',
           yamlValue: '[^0-9]+',
           matchValue: {
-            '[^0-9]+': [MatchPosition(line: 12, column: 1)],
+            '[^0-9]+': [MatchPosition(line: 22, column: 1)],
           },
         ),
         CheckResult(
@@ -92,7 +92,7 @@ void main() {
           yamlValue: '[^0-9]+=+',
           matchValue: {
             '{{   site.repo.reg-exp2 | xxx }}+': [
-              MatchPosition(line: 13, column: 1)
+              MatchPosition(line: 23, column: 1)
             ],
           },
         ),
