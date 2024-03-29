@@ -1,3 +1,4 @@
+/// YAML Variable Scanner
 library yaml_variable_scanner;
 
 export 'src/yaml_variable_scanner.dart';

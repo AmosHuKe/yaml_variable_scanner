@@ -4,6 +4,7 @@ import 'file.dart';
 
 import 'model/config_model.dart';
 
+/// Load yaml_variable_scanner.yaml config
 class ConfigLoad with FileLoad {
   /// Load yaml_variable_scanner.yaml config
   ///
@@ -13,6 +14,7 @@ class ConfigLoad with FileLoad {
   /// `yaml_variable_scanner.yaml` config file path
   final String filePath;
 
+  /// Get yaml_variable_scanner.yaml config
   Future<YamlVariableScannerConfig> getConfig() async {
     final String configLines = await getFileContent(filePath);
     final yamlConfig = loadYaml(configLines)['yaml_variable_scanner'];

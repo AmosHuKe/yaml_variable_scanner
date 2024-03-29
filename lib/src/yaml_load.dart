@@ -7,6 +7,7 @@ import 'model/yaml_model.dart';
 
 typedef PrefixFunction = String Function(String yamlKey);
 
+/// Load YAML variables
 class YamlLoad extends FilePath with FileLoad {
   /// Load YAML variables
   ///
@@ -85,6 +86,8 @@ class YamlLoad extends FilePath with FileLoad {
   }
 
   /// Flatten YAML collection result
+  ///
+  /// - [collections] e.g. Map, List
   Map<String, String> _flattenYaml(dynamic collections) {
     final Map<String, String> result = {};
     _flattenCollection(collections, '', result);

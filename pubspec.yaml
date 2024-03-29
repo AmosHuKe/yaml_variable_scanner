@@ -1,5 +1,7 @@
 name: yaml_variable_scanner
-description: ''
+description: >-
+  YAML Variable Scanner,
+  used to scan multiple files for text that can use YAML variables.
 publish_to: none
 version: 0.0.1
 

@@ -11,6 +11,7 @@ import 'model/config_model.dart';
 import 'model/yaml_model.dart';
 import 'model/check_model.dart';
 
+/// YAML Variable Scanner
 class YamlVariableScanner {
   const YamlVariableScanner._();
 
@@ -31,6 +32,7 @@ class YamlVariableScanner {
 
     final List<CheckResult> checkResultList = [];
 
+    /// Console
     Console.init();
     final ProgressBar consoleProgressBar = ProgressBar();
     final LoadingBar consoleLoadingBar = LoadingBar()..start();

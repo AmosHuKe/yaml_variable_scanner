@@ -3,6 +3,7 @@ import 'file.dart';
 import 'model/check_model.dart';
 import 'model/yaml_model.dart';
 
+/// Check file contents with YAML variables
 class VariableCheck with FileLoad {
   /// Check file contents with YAML variables
   ///
@@ -23,9 +24,11 @@ class VariableCheck with FileLoad {
 
   /// Ignore text that doesn't need to match
   ///
-  /// e.g. "<p>xxxx</p>", r"^---([\s\S]*?)---$"
+  /// e.g.
+  /// - `r"^---([\s\S]*?)---$"`
+  /// - `r"^{%\s*comment\s*%}([\s\S]*?){%\s*endcomment\s*%}$"`
   ///
-  /// [RegExp Syntax]
+  /// (RegExp Syntax)
   final List<String> ignoreCheckText;
 
   Future<List<CheckResult>> run() async {
@@ -102,6 +105,7 @@ class VariableCheck with FileLoad {
   ///
   /// @return [MatchPosition]
   MatchPosition _matchPosition(String text, int matchStart) {
+    /// line
     final List<String> lines = text.split('\n');
     int lineNumber = 0;
     int currentIndex = 0;
@@ -112,6 +116,7 @@ class VariableCheck with FileLoad {
     }
     final int line = lineNumber + 1;
 
+    /// column
     final int lineStartIndex = text.lastIndexOf('\n', matchStart) + 1;
     final int column = matchStart - lineStartIndex + 1;
 
