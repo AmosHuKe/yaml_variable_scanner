@@ -13,7 +13,8 @@ class YamlVariable {
   /// YAML Value
   final String value;
 
-  /// RegExp Syntax
+  /// All matches
+  /// (RegExp Syntax)
   final List<String> matchValue;
 
   @override
@@ -28,16 +29,9 @@ class YamlVariable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is YamlVariable &&
-        other.key == key &&
-        other.value == value &&
-        other.matchValue == matchValue;
+    return other is YamlVariable && other.toString() == toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-        key.hashCode,
-        value.hashCode,
-        matchValue.hashCode,
-      );
+  int get hashCode => toString().hashCode;
 }

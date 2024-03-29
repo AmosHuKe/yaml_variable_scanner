@@ -24,10 +24,7 @@ class MatchPosition {
   }
 
   @override
-  int get hashCode => Object.hash(
-        line.hashCode,
-        column.hashCode,
-      );
+  int get hashCode => toString().hashCode;
 }
 
 class CheckResult {
@@ -55,18 +52,9 @@ class CheckResult {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is CheckResult &&
-        other.filePath == filePath &&
-        other.yamlKey == yamlKey &&
-        other.yamlValue == yamlValue &&
-        other.matchValue.toString().hashCode == matchValue.toString().hashCode;
+    return other is CheckResult && other.toString() == toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-        filePath.hashCode,
-        yamlKey.hashCode,
-        yamlValue.hashCode,
-        matchValue.toString().hashCode,
-      );
+  int get hashCode => toString().hashCode;
 }

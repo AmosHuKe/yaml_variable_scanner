@@ -56,22 +56,9 @@ class YamlVariableScannerConfig {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is YamlVariableScannerConfig &&
-        other.yamlFilePath == yamlFilePath &&
-        other.ignoreYamlFilePath == ignoreYamlFilePath &&
-        other.ignoreYamlKey == ignoreYamlKey &&
-        other.checkFilePath == checkFilePath &&
-        other.ignoreCheckFilePath == ignoreCheckFilePath &&
-        other.ignoreCheckText == ignoreCheckText;
+    return other is YamlVariableScannerConfig && other.toString() == toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-        yamlFilePath.hashCode,
-        ignoreYamlFilePath.hashCode,
-        ignoreYamlKey.hashCode,
-        checkFilePath.hashCode,
-        ignoreCheckFilePath.hashCode,
-        ignoreCheckText.hashCode,
-      );
+  int get hashCode => toString().hashCode;
 }
