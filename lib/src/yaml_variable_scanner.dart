@@ -55,9 +55,6 @@ class YamlVariableScanner {
       ignoreGlobPathList: scannerConfig.ignoreCheckFilePath ?? [],
     ).getPath();
 
-    /// YAML all results
-    // final Map<String, YamlCheckResult> yamlCheckResultAll = {};
-
     /// Start check
     for (final MapEntry<int, String>(
           key: index,
@@ -74,7 +71,7 @@ class YamlVariableScanner {
 
         Console.eraseLine(1);
         if (enablePrint) {
-          _consolePrintCheckResult(checkResultAll);
+          _consolePrintCheckResult(print, checkResultAll);
         }
         consoleProgressBar.update(
           (index / (filePathAll.length - 1) * 100).toInt(),
@@ -82,30 +79,20 @@ class YamlVariableScanner {
       }
     }
 
-    // if (enablePrint && yamlCheckResultAll.isNotEmpty) {
-    //   print('------------------------------------------------');
-    //   print('[YAML Total Matches]:');
-    //   for (final yamlCheckResult in yamlCheckResultAll.entries) {
-    //     print('''
-    // │
-    // ├── [YAML Key]: ${yamlCheckResult.key}
-    // └── [YAML Value]: ${yamlCheckResult.value.yamlValue}''');
-
-    //     for (final matchValue in yamlCheckResult.value.matchValue.entries) {
-    //       print('''
-    //     ├── [Match Value]: ${matchValue.key}
-    //     └── [Total Matches]: ${matchValue.value}''');
-    //     }
-    //   }
-    //   print('------------------------------------------------');
-    // }
+    if (enablePrint) {
+      Console.eraseLine(1);
+      _consolePrintStatisticCheckResult(print, checkResultList);
+    }
 
     consoleLoadingBar.stop();
     return checkResultList;
   }
 
   /// Console Print Results
-  static void _consolePrintCheckResult(List<CheckResult> checkResultAll) {
+  static void _consolePrintCheckResult(
+    void Function(Object message) print,
+    List<CheckResult> checkResultAll,
+  ) {
     Console.init();
     for (final CheckResult checkResult in checkResultAll) {
       print('');
@@ -198,6 +185,87 @@ class YamlVariableScanner {
         }
       }
       print('');
+    }
+  }
+
+  /// Console Print Results (Statistic)
+  static void _consolePrintStatisticCheckResult(
+    void Function(Object message) print,
+    List<CheckResult> checkResultAll,
+  ) {
+    Console.init();
+    final Map<YamlVariable, Map<String, int>> statisticCheckResultAll = {};
+
+    for (final CheckResult checkResult in checkResultAll) {
+      for (final matchValue in checkResult.matchValue.entries) {
+        final YamlVariable yamlVariable = YamlVariable(
+          key: checkResult.yamlKey,
+          value: checkResult.yamlValue,
+          matchValue: [],
+        );
+        final Map<String, int> preMatchMap =
+            statisticCheckResultAll[yamlVariable] ?? {};
+        final int preMatchLength =
+            statisticCheckResultAll[yamlVariable]?[matchValue.key] ?? 0;
+        final int matchLength = matchValue.value.length;
+        final matchMap = preMatchMap
+          ..addAll({matchValue.key: matchLength + preMatchLength});
+        statisticCheckResultAll.addAll({yamlVariable: matchMap});
+      }
+    }
+
+    if (statisticCheckResultAll.isNotEmpty) {
+      final TextPen divider = TextPen()
+          .lightMagenta()
+          .text('========================================');
+
+      TextPen().lightMagenta().text('🌏 [Total statistics]:').print();
+      divider.print();
+      for (final statisticCheckResult in statisticCheckResultAll.entries) {
+        print('');
+        TextPen()
+            .normal()
+            .text('  🔍 [YAML Key]: ')
+            .normal()
+            .text(statisticCheckResult.key.key)
+            .print();
+        TextPen()
+            .normal()
+            .text('  🔍 [YAML Value]: ')
+            .normal()
+            .text(statisticCheckResult.key.value)
+            .print();
+
+        for (final matchValue in statisticCheckResult.value.entries) {
+          bool isMatchValueLast = false;
+          if (statisticCheckResult.value.entries.last.key == matchValue.key) {
+            isMatchValueLast = true;
+          }
+
+          final TextPen matchValuePen = TextPen();
+          matchValuePen.gray();
+          switch ([isMatchValueLast]) {
+            case [false]:
+              matchValuePen.text('    ├── ');
+              break;
+            case [true]:
+              matchValuePen.text('    └── ');
+              break;
+          }
+          matchValuePen
+              .normal()
+              .text('📄 [Match Content ')
+              .blue()
+              .text('(total ${matchValue.value})')
+              .normal()
+              .text(']: ')
+              .normal()
+              .text(matchValue.key)
+              .print();
+        }
+      }
+      print('');
+      divider.print();
     }
   }
 }
