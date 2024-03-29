@@ -9,7 +9,7 @@ final class ExampleCommandRunner extends CommandRunner<int> {
   ExampleCommandRunner()
       : super(
           'example',
-          'Check if YAML variables are used in the file.',
+          'Scans multiple files for text that can use YAML variables.',
         ) {
     addCommand(CheckCommand());
   }

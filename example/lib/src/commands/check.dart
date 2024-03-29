@@ -6,7 +6,8 @@ import 'package:yaml_variable_scanner/yaml_variable_scanner.dart';
 
 final class CheckCommand extends Command<int> {
   @override
-  String get description => 'Check if YAML variables are used in the file.';
+  String get description =>
+      'Scans multiple files for text that can use YAML variables.';
 
   @override
   String get name => 'check';
