@@ -2,8 +2,9 @@ name: yaml_variable_scanner
 description: >-
   YAML Variable Scanner,
   used to scan multiple files for text that can use YAML variables.
-publish_to: none
 version: 0.0.1
+repository: https://github.com/AmosHuKe/yaml_variable_scanner
+issue_tracker: https://github.com/AmosHuKe/yaml_variable_scanner/issues
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
