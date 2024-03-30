@@ -14,7 +14,7 @@ class YamlLoad extends FilePath with FileLoad {
   /// - [globPathList] YAML paths (Glob syntax)
   /// - [ignoreGlobPathList] Ignore YAML paths (Glob syntax)
   /// - [ignoreYamlKeyList] Ignore YAML keys (RegExp syntax)
-  /// - [prefix] Variable prefixes for deep variable checking.
+  /// - [prefix] Variable prefix for deep variable checking.
   ///            e.g. `(yamlKey) => 'site.$yamlKey'` -> `site.aa`
   const YamlLoad(
     super.globPathList, {
@@ -26,7 +26,7 @@ class YamlLoad extends FilePath with FileLoad {
   /// Ignore YAML keys (RegExp syntax)
   final List<String> ignoreYamlKeyList;
 
-  /// Variable prefixes for deep variable checking.
+  /// Variable prefix for deep variable checking.
   /// e.g. `(yamlKey) => 'site.$yamlKey'` -> `site.aa`
   final PrefixFunction? prefix;
 

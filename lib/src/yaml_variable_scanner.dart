@@ -18,10 +18,10 @@ class YamlVariableScanner {
   /// Run scanning check
   ///
   /// - [configPath] `yaml_variable_scanner.yaml` config file path
-  /// - [stdout] Stdout
-  /// - [prefix] Variable prefixes for deep variable checking.
+  /// - [stdout] stdout from dart:io
+  /// - [prefix] Prefix used for YAML variables.
   ///            e.g. `(yamlKey) => 'site.$yamlKey'` -> `site.aa`
-  /// - [enablePrint] Console Print
+  /// - [enablePrint] Enable console printing of results
   static Future<List<CheckResult>> run(
     String configPath,
     Stdout stdout, {

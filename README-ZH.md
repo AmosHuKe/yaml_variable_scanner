@@ -1,5 +1,5 @@
-📓 Language: English | [中文](README-ZH.md)  
-💡 See the [Migration Guide][] to learn how to migrate between breaking changes.  
+📓 语言：[English](README.md) | 中文  
+💡 查看：[迁移指南][] 了解如何从破坏性改动中迁移为可用代码  
 
 <br/><br/>
 
@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <strong>YAML Variable Scanner, used to scan multiple files for text that can use YAML variables.</strong>
+  <strong>YAML 变量扫描器，用于扫描多个文件中可以使用 YAML 变量的文本。</strong>
 </p>
 
 <br/>
@@ -24,48 +24,48 @@
 
 <br/>
 
-## Table of contents 🪄
+## 目录 🪄
 
 <sub>
 
-- [Features](#features-)
+- [特性](#特性-)
 
-- [Example](#example-)
+- [示例](#示例-)
 
-- [Install](#install-)
+- [安装](#安装-)
 
-- [Simple usage](#simple-usage-)
+- [简单用法](#简单用法-)
 
-  - [Run checks (config file)](#run-checks-(config-file))
+  - [运行检查（配置文件）](#运行检查（配置文件）)
 
-  - [yaml_variable_scanner config file](#yaml_variable_scanner-config-file)
+  - [yaml_variable_scanner 配置文件](#yaml_variable_scanner-配置文件)
 
-- [Usage](#usage-)
+- [使用](#使用-)
 
-  - [YamlVariableScanner.run() parameters](#yamlvariablescannerrun-parameters-)
+  - [YamlVariableScanner.run() 参数](#yamlvariablescanner.run()-参数-)
 
-- [License](#license-)
+- [许可证](#许可证-)
 
 </sub>
 
 
-## Features ✨  
+## 特性 ✨
 
 > [!IMPORTANT]  
-> Currently, only the following variables support checking:  
+> 目前仅适用于以下变量使用方式的检查：  
 > - `{{ x.xx.xxx }}`  
 
-- 📂 Multiple files can be specified (Glob syntax)
-- 🗑️ Ignore checks can be specified
-  - Ignore files (Glob syntax)
-  - Ignore YAML variables, text paragraphs (RegExp syntax)
-- 🔍 Support for checking existing YAML variables in text
-- 🔦 Detailed console printout (with statistics)
+- 📂 可指定多文件（Glob 语法）
+- 🗑️ 可指定忽略检查
+  - 忽略文件（Glob 语法）
+  - 忽略 YAML 变量、文本段落（RegExp 语法）
+- 🔍 支持文本中已有 YAML 变量的检查
+- 🔦 详细的控制台打印（附带统计）
 
 
-## Example 💡
+## 示例 💡
 
-Use the following command to run the check in the [example][]:
+使用以下指令运行 [example][] 中的检查：
 
 ```sh
 $ dart run example --help
@@ -74,23 +74,23 @@ $ dart run example check
 ```
 
 
-## Install 🎯
-### Versions compatibility 🐦  
+## 安装 🎯
+### 版本兼容 🐦  
 
 | Flutter / Dart               | 3.19.0+ / 3.3.0+   |  
 | ---                          | :----------------: |  
 | yaml_variable_scanner 0.0.1+ | ✅                 |  
 
 
-### Add package 📦  
+### 添加 yaml_variable_scanner 📦  
 
-Run this command with Flutter,  
+使用 Flutter 运行以下指令，  
 
 ```sh
 $ dart pub add yaml_variable_scanner
 ```
 
-or add `yaml_variable_scanner` to `pubspec.yaml` dependencies manually.  
+或手动将 `yaml_variable_scanner` 添加到 `pubspec.yaml` 依赖项中。  
 
 ```yaml
 dependencies:
@@ -98,15 +98,15 @@ dependencies:
 ```
 
 
-## Simple usage 📖 
-### Run checks (config file)
+## 简单用法 📖  
+### 运行检查（配置文件）
 
 ```dart
 import 'dart:io';
 import 'package:yaml_variable_scanner/yaml_variable_scanner.dart';
 
 YamlVariableScanner.run(
-  /// yaml_variable_scanner config file
+  /// yaml_variable_scanner 配置文件
   './yaml_variable_scanner.yaml',
   stdout,
   /// 'site.$yamlKey' -> 'site.x.xxx'
@@ -115,53 +115,53 @@ YamlVariableScanner.run(
 ```
 
 
-### yaml_variable_scanner config file
+### yaml_variable_scanner 配置文件
 
-1. Create the [yaml_variable_scanner.yaml][] file.  
-2. Complete the [yaml_variable_scanner.yaml][] configuration.  
+1. 创建 [yaml_variable_scanner.yaml][] 文件。  
+2. 完善 [yaml_variable_scanner.yaml][] 配置。  
 
 ```yaml
 yaml_variable_scanner:
 
-  # File path for YAML variables
+  # YAML 变量的文件路径
   #
-  # (Glob Syntax)
+  # (Glob 语法)
   yamlFilePath:
     - "test/*.yaml"
 
-  # Ignore YAML file path
+  # 忽略 YAML 文件的路径
   #
-  # (Glob Syntax)
+  # (Glob 语法)
   ignoreYamlFilePath:
     - "test/test.yaml"
 
-  # Ignore YAML Key
+  # 忽略 YAML Key
   #
-  # e.g. "^a.bb$"
+  # 例如："^a.bb$"
   #
-  # (RegExp Syntax)
+  # (RegExp 语法)
   ignoreYamlKey:
     - ^description$
   
-  # File path for check file contents
+  # 检查文件内容的路径
   #
-  # (Glob Syntax)
+  # (Glob 语法)
   checkFilePath:
     - "test/**/*.md"
 
-  # Ignore file paths to check
+  # 忽略需要检查的文件路径
   #
-  # (Glob Syntax)
+  # (Glob 语法)
   ignoreCheckFilePath:
     - "test/content/**.md"
 
-  # Ignore text that doesn't need to match
+  # 忽略不需要匹配检查的文本
   #
-  # e.g. 
+  # 例如： 
   # - `r"^---([\s\S]*?)---$"`
   # - `r"^{%\s*comment\s*%}([\s\S]*?){%\s*endcomment\s*%}$"`
   #
-  # (RegExp Syntax)
+  # (RegExp 语法)
   ignoreCheckText:
     # --- 
     # xxx
@@ -175,25 +175,25 @@ yaml_variable_scanner:
 ```
 
 
-## Usage 📖  
-### `YamlVariableScanner.run()` parameters 🤖  
+## 使用 📖  
+### `YamlVariableScanner.run()` 参数 🤖  
 
-| Parameter | Type | Default | Description |  
+| 参数名 | 类型 | 默认值 | 描述 |  
 | --- | --- | --- | --- |
-| configPath <sup>`required`</sup> | `String` | - | [yaml_variable_scanner.yaml][] config file path. |  
-| stdout <sup>`required`</sup> | `Stdout` | - | stdout from dart:io |  
-| prefix | `PrefixFunction?` | null | Prefix used for YAML variables. <br/> e.g. <br/> `(yamlKey) => 'site.$yamlKey'` <br/> It is possible to check for variables in the text that are used in the manner of `{{ site.x.xx }}`. |  
-| enablePrint | `bool` | true | Enable console printing of results. |  
+| configPath <sup>`required`</sup> | `String` | - | [yaml_variable_scanner.yaml][] 配置文件路径。 |  
+| stdout <sup>`required`</sup> | `Stdout` | - | 来自 dart:io 的 stdout |  
+| prefix | `PrefixFunction?` | null | YAML 变量使用的前缀。 <br/> 例如：<br/> `(yamlKey) => 'site.$yamlKey'` <br/> 就可以检查文本中使用方式为 `{{ site.x.xx }}` 的变量。 |  
+| enablePrint | `bool` | true | 是否开启控制台打印结果。 |  
 
 
-## License 📄  
+## 许可证 📄  
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green)](https://github.com/AmosHuKe/yaml_variable_scanner/blob/main/LICENSE)  
-Open sourced under the MIT license.  
+根据 MIT 许可证开源。
 
 © AmosHuKe
 
 
-[Migration Guide]: https://github.com/AmosHuKe/yaml_variable_scanner/blob/main/guides/migration_guide.md
+[迁移指南]: https://github.com/AmosHuKe/yaml_variable_scanner/blob/main/guides/migration_guide.md
 [yaml_variable_scanner.yaml]: https://github.com/AmosHuKe/yaml_variable_scanner/blob/main/yaml_variable_scanner.yaml
 [example]: https://github.com/AmosHuKe/yaml_variable_scanner/tree/main/example

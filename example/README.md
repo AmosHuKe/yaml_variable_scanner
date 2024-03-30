@@ -1,7 +1,7 @@
 # Example
 
-```
-dart run example --help
+```sh
+$ dart run example --help
 
-dart run example check
+$ dart run example check
 ```

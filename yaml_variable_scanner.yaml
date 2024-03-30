@@ -6,7 +6,7 @@ yaml_variable_scanner:
   yamlFilePath:
     - "test/*.yaml"
 
-  # Ignore Yaml file path
+  # Ignore YAML file path
   #
   # (Glob Syntax)
   ignoreYamlFilePath:
@@ -20,7 +20,7 @@ yaml_variable_scanner:
   ignoreYamlKey:
     - ^description$
   
-  # Check the file paths of the contents
+  # File path for check file contents
   #
   # (Glob Syntax)
   checkFilePath:
