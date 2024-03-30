@@ -36,7 +36,7 @@
 
 - [Simple usage](#simple-usage-)
 
-  - [Run checks (config file)](#run-checks-(config-file))
+  - [Run checks (config file)](#run-checks-config-file)
 
   - [yaml_variable_scanner config file](#yaml_variable_scanner-config-file)
 

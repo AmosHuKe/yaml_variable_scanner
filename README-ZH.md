@@ -36,13 +36,13 @@
 
 - [简单用法](#简单用法-)
 
-  - [运行检查（配置文件）](#运行检查（配置文件）)
+  - [运行检查（配置文件）](#运行检查配置文件)
 
   - [yaml_variable_scanner 配置文件](#yaml_variable_scanner-配置文件)
 
 - [使用](#使用-)
 
-  - [YamlVariableScanner.run() 参数](#yamlvariablescanner.run()-参数-)
+  - [YamlVariableScanner.run() 参数](#yamlvariablescannerrun-参数-)
 
 - [许可证](#许可证-)
 
