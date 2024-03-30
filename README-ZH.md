@@ -19,7 +19,10 @@
 <br/>
 
 <div align="center">
-<!-- -->
+  <img alt="example-video.gif" src="https://raw.githubusercontent.com/AmosHuKe/yaml_variable_scanner/main/README/example-video.gif" />
+
+  [[example][]]
+
 </div>
 
 <br/>
