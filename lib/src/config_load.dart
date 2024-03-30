@@ -18,9 +18,15 @@ class ConfigLoad with FileLoad {
   Future<YamlVariableScannerConfig> getConfig() async {
     final String configLines = await getFileContent(filePath);
     final yamlConfig = loadYaml(configLines)['yaml_variable_scanner'];
-    final List<String>? yamlFilePath = (yamlConfig['yamlFilePath'] as List?)
-        ?.map((value) => value.toString())
-        .toList();
+    final List<YamlFilePath>? yamlFilePath =
+        (yamlConfig['yamlFilePath'] as List?)
+            ?.map(
+              (value) => YamlFilePath(
+                path: value['path'].toString(),
+                variablePrefix: value['variablePrefix'].toString(),
+              ),
+            )
+            .toList();
     final List<String>? ignoreYamlFilePath =
         (yamlConfig['ignoreYamlFilePath'] as List?)
             ?.map((value) => value.toString())

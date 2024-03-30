@@ -1,6 +1,7 @@
 yaml_variable_scanner:
   yamlFilePath:
-    - "test/*.yaml"
+    - path: "test/config.yaml"
+      variablePrefix: "site."
   ignoreYamlFilePath:
   ignoreYamlKey:
   checkFilePath:
@@ -8,13 +9,12 @@ yaml_variable_scanner:
   ignoreCheckFilePath:
     # - "test/content/**.md"
   ignoreCheckText:
-    # --- 
-    # xxx
-    # ---
-    - ^---([\s\S]*?)---$
+    # --- xxx ---
+    - ^\s*---([\s\S]*?)---$
 
-    # {% comment %}
-    #   xxx
-    # {% endcomment %}
-    - ^{%\s*comment\s*%}([\s\S]*?){%\s*endcomment\s*%}$
+    # {%- comment %} xxx {% endcomment -%}
+    - ^\s*{%-?\s*comment\s*-?%}([\s\S]*?){%-?\s*endcomment\s*-?%}$
+
+    # <!-- xxx -->
+    - ^\s*<!---?\s*([\s\S]*?)\s*-?-->$
   

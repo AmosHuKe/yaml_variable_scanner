@@ -112,8 +112,6 @@ YamlVariableScanner.run(
   /// yaml_variable_scanner config file
   './yaml_variable_scanner.yaml',
   stdout,
-  /// 'site.$yamlKey' -> 'site.x.xxx'
-  prefix: (yamlKey) => 'site.$yamlKey',
 );
 ```
 
@@ -127,10 +125,11 @@ YamlVariableScanner.run(
 yaml_variable_scanner:
 
   # File path for YAML variables
-  #
-  # (Glob Syntax)
   yamlFilePath:
-    - "test/*.yaml"
+    - path: "test/siteA.yaml" # YAML path (Glob syntax)
+      variablePrefix: "a." # Variable prefix. e.g. `a.` -> `a.x.xx`
+    - path: "test/siteB.yaml"
+      variablePrefix: "b."
 
   # Ignore YAML file path
   #
@@ -161,20 +160,20 @@ yaml_variable_scanner:
   # Ignore text that doesn't need to match
   #
   # e.g. 
-  # - `r"^---([\s\S]*?)---$"`
-  # - `r"^{%\s*comment\s*%}([\s\S]*?){%\s*endcomment\s*%}$"`
+  # - `r"^\s*---([\s\S]*?)---$"`
+  # - `r"^\s*{%-?\s*comment\s*-?%}([\s\S]*?){%-?\s*endcomment\s*-?%}$"`
+  # - `r"^\s*<!---?\s*([\s\S]*?)\s*-?-->$"`
   #
   # (RegExp Syntax)
   ignoreCheckText:
-    # --- 
-    # xxx
-    # ---
-    - ^---([\s\S]*?)---$
+    # --- xxx ---
+    - ^\s*---([\s\S]*?)---$
 
-    # {% comment %}
-    #   xxx
-    # {% endcomment %}
-    - ^{%\s*comment\s*%}([\s\S]*?){%\s*endcomment\s*%}$
+    # {%- comment %} xxx {% endcomment -%}
+    - ^\s*{%-?\s*comment\s*-?%}([\s\S]*?){%-?\s*endcomment\s*-?%}$
+
+    # <!-- xxx -->
+    - ^\s*<!---?\s*([\s\S]*?)\s*-?-->$
 ```
 
 
@@ -185,7 +184,6 @@ yaml_variable_scanner:
 | --- | --- | --- | --- |
 | configPath <sup>`required`</sup> | `String` | - | [yaml_variable_scanner.yaml][] config file path. |  
 | stdout <sup>`required`</sup> | `Stdout` | - | stdout from dart:io |  
-| prefix | `PrefixFunction?` | null | Prefix used for YAML variables. <br/> e.g. <br/> `(yamlKey) => 'site.$yamlKey'` <br/> It is possible to check for variables in the text that are used in the manner of `{{ site.x.xx }}`. |  
 | enablePrint | `bool` | true | Enable console printing of results. |  
 
 

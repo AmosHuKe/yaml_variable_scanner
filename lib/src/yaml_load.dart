@@ -3,43 +3,53 @@ import 'package:yaml/yaml.dart';
 import 'utils.dart';
 import 'file.dart';
 
+import 'model/config_model.dart';
 import 'model/yaml_model.dart';
 
-typedef PrefixFunction = String Function(String yamlKey);
-
 /// Load YAML variables
-class YamlLoad extends FilePath with FileLoad {
+class YamlLoad with FileLoad {
   /// Load YAML variables
   ///
-  /// - [globPathList] YAML paths (Glob syntax)
+  /// - [yamlFilePathList] List [YamlFilePath]
   /// - [ignoreGlobPathList] Ignore YAML paths (Glob syntax)
   /// - [ignoreYamlKeyList] Ignore YAML keys (RegExp syntax)
-  /// - [prefix] Variable prefix for deep variable checking.
-  ///            e.g. `(yamlKey) => 'site.$yamlKey'` -> `site.aa`
+  ///
   const YamlLoad(
-    super.globPathList, {
-    super.ignoreGlobPathList,
+    this.yamlFilePathList, {
+    this.ignoreGlobPathList = const [],
     this.ignoreYamlKeyList = const [],
-    this.prefix,
   });
+
+  /// File path for YAML variables
+  final List<YamlFilePath> yamlFilePathList;
+
+  /// Ignore file paths (Glob syntax)
+  final List<String> ignoreGlobPathList;
 
   /// Ignore YAML keys (RegExp syntax)
   final List<String> ignoreYamlKeyList;
-
-  /// Variable prefix for deep variable checking.
-  /// e.g. `(yamlKey) => 'site.$yamlKey'` -> `site.aa`
-  final PrefixFunction? prefix;
 
   Future<List<YamlVariable>> getVariable() async {
     final List<YamlVariable> yamlVariableAll = [];
     final Map<String, String> yamlAll = {};
 
-    final List<String> pathList = getPath();
-    for (final String path in pathList) {
-      final String lines = await getFileContent(path);
-      final yamlDoc = loadYaml(lines);
-      final Map<String, String> yamlCollections = _flattenYaml(yamlDoc);
-      yamlAll.addAll(yamlCollections);
+    for (final YamlFilePath yamlFilePath in yamlFilePathList) {
+      final List<String> pathList = getFilePath(
+        [yamlFilePath.path],
+        ignoreGlobPathList,
+      );
+      for (final String path in pathList) {
+        final String lines = await getFileContent(path);
+        final yamlDoc = loadYaml(lines);
+        final Map<String, String> yamlCollections = _flattenYaml(yamlDoc);
+        yamlAll.addAll(
+          /// prefix
+          yamlCollections.map(
+            (key, value) =>
+                MapEntry('${yamlFilePath.variablePrefix}$key', value),
+          ),
+        );
+      }
     }
 
     /// Ignore YAML keys
@@ -60,14 +70,11 @@ class YamlLoad extends FilePath with FileLoad {
         final RegExp regExp = RegExp(r'' + yamlMatchValue);
         final bool hasMatch = regExp.hasMatch(yamlVariable.value);
         if (hasMatch) {
-          final String prefixValue =
-              prefix != null ? prefix!(yamlMatch.key) : yamlMatch.key;
-
           /// {{ prefix }}
           yamlMatchAll.add(
             yamlVariable.value.escapedPatternValue.replaceAll(
               regExp.pattern,
-              r'{{\s*' + prefixValue.escapedPatternValue + r'.*?}}',
+              r'{{\s*' + yamlMatch.key.escapedPatternValue + r'.*?}}',
             ),
           );
         }

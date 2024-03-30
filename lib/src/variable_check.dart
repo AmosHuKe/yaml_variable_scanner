@@ -25,8 +25,9 @@ class VariableCheck with FileLoad {
   /// Ignore text that doesn't need to match
   ///
   /// e.g.
-  /// - `r"^---([\s\S]*?)---$"`
-  /// - `r"^{%\s*comment\s*%}([\s\S]*?){%\s*endcomment\s*%}$"`
+  /// - `r"^\s*---([\s\S]*?)---$"`
+  /// - `r"^\s*{%-?\s*comment\s*-?%}([\s\S]*?){%-?\s*endcomment\s*-?%}$"`
+  /// - `r"^\s*<!---?\s*([\s\S]*?)\s*-?-->$"`
   ///
   /// (RegExp Syntax)
   final List<String> ignoreCheckText;

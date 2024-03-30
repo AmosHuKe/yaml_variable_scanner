@@ -19,13 +19,11 @@ class YamlVariableScanner {
   ///
   /// - [configPath] `yaml_variable_scanner.yaml` config file path
   /// - [stdout] stdout from dart:io
-  /// - [prefix] Prefix used for YAML variables.
-  ///            e.g. `(yamlKey) => 'site.$yamlKey'` -> `site.aa`
   /// - [enablePrint] Enable console printing of results
+  ///
   static Future<List<CheckResult>> run(
     String configPath,
     Stdout stdout, {
-    PrefixFunction? prefix,
     enablePrint = true,
   }) async {
     void print(Object message) => stdout.writeln(message);
@@ -35,7 +33,7 @@ class YamlVariableScanner {
     /// Console
     Console.init();
     final ProgressBar consoleProgressBar = ProgressBar();
-    final LoadingBar consoleLoadingBar = LoadingBar()..start();
+    final LoadingBar consoleLoadingBar = LoadingBar();
 
     /// Get configuration
     final YamlVariableScannerConfig scannerConfig =
@@ -46,45 +44,52 @@ class YamlVariableScanner {
       scannerConfig.yamlFilePath ?? [],
       ignoreGlobPathList: scannerConfig.ignoreYamlFilePath ?? [],
       ignoreYamlKeyList: scannerConfig.ignoreYamlKey ?? [],
-      prefix: prefix,
     ).getVariable();
 
     /// Get directory files to scan
-    final List<String> filePathAll = FilePath(
+    final List<String> filePathAll = FileLoad().getFilePath(
       scannerConfig.checkFilePath ?? [],
-      ignoreGlobPathList: scannerConfig.ignoreCheckFilePath ?? [],
-    ).getPath();
+      scannerConfig.ignoreCheckFilePath ?? [],
+    );
 
     /// Start check
     for (final MapEntry<int, String>(
           key: index,
           value: filePath,
         ) in filePathAll.asMap().entries) {
+      /// Console Print (loading)
+      consoleLoadingBar.start();
+      print('Checking: $filePath');
+      consoleProgressBar.update(
+        (index / (filePathAll.length - 1) * 100).toInt(),
+      );
+
       final List<CheckResult> checkResultAll = await VariableCheck(
         yamlVariableAll,
         filePath,
         ignoreCheckText: scannerConfig.ignoreCheckText ?? [],
       ).run();
 
+      /// Console Print (erase line)
+      consoleLoadingBar.stop();
+      for (int i = 0; i < 2; i++) {
+        Console.moveCursorUp();
+        Console.eraseLine();
+      }
+
       if (checkResultAll.isNotEmpty) {
         checkResultList.addAll(checkResultAll);
 
-        Console.eraseLine(1);
         if (enablePrint) {
           _consolePrintCheckResult(print, checkResultAll);
         }
-        consoleProgressBar.update(
-          (index / (filePathAll.length - 1) * 100).toInt(),
-        );
       }
     }
 
     if (enablePrint) {
-      Console.eraseLine(1);
       _consolePrintStatisticCheckResult(print, checkResultList);
     }
 
-    consoleLoadingBar.stop();
     return checkResultList;
   }
 

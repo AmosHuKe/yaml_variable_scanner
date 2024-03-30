@@ -10,7 +10,7 @@ void main() {
       final List<CheckResult> checkResultAllExpect = [
         CheckResult(
           filePath: r'.\test\case1\posts\1.md',
-          yamlKey: 'description',
+          yamlKey: 'a.description',
           yamlValue:
               'Dart is a client-optimized language for developing fast apps on any platform.',
           matchValue: {
@@ -20,7 +20,7 @@ void main() {
         ),
         CheckResult(
           filePath: r'.\test\case1\posts\1.md',
-          yamlKey: 'repo.dart.lang',
+          yamlKey: 'a.repo.dart.lang',
           yamlValue: '<p>123</p>\n<p>456</p>\n',
           matchValue: {
             '<p>123</p>\n<p>456</p>\n': [MatchPosition(line: 6, column: 1)],
@@ -28,7 +28,7 @@ void main() {
         ),
         CheckResult(
           filePath: r'.\test\case1\posts\1.md',
-          yamlKey: 'repo.dart.reg-exp',
+          yamlKey: 'a.repo.dart.reg-exp',
           yamlValue: '[^0-9]+',
           matchValue: {
             '[^0-9]+': [MatchPosition(line: 12, column: 1)],
@@ -36,10 +36,10 @@ void main() {
         ),
         CheckResult(
           filePath: r'.\test\case1\posts\1.md',
-          yamlKey: 'repo.reg-exp2',
+          yamlKey: 'a.repo.reg-exp2',
           yamlValue: '[^0-9]+=',
           matchValue: {
-            '{{ site.repo.dart.reg-exp }}=': [
+            '{{ a.repo.dart.reg-exp }}=': [
               MatchPosition(line: 14, column: 1),
               MatchPosition(line: 15, column: 1)
             ],
@@ -47,22 +47,48 @@ void main() {
         ),
         CheckResult(
           filePath: r'.\test\case1\posts\1.md',
-          yamlKey: 'repo.reg-exp3',
+          yamlKey: 'a.repo.reg-exp3',
           yamlValue: '[^0-9]+=+',
           matchValue: {
-            '{{ site.repo.dart.reg-exp }}=+': [
+            '{{ a.repo.dart.reg-exp }}=+': [
               MatchPosition(line: 15, column: 1),
             ],
-            '{{ site.repo.reg-exp2 }}+': [MatchPosition(line: 16, column: 1)],
-            '{{site.repo.reg-exp2}}+': [MatchPosition(line: 17, column: 1)],
-            '{{   site.repo.reg-exp2 | xxx }}+': [
+            '{{ a.repo.reg-exp2 }}+': [MatchPosition(line: 16, column: 1)],
+            '{{a.repo.reg-exp2}}+': [MatchPosition(line: 17, column: 1)],
+            '{{   a.repo.reg-exp2 | xxx }}+': [
+              MatchPosition(line: 19, column: 1)
+            ],
+          },
+        ),
+        CheckResult(
+          filePath: r'.\test\case1\posts\1.md',
+          yamlKey: 'b.reg-exp2',
+          yamlValue: '[^0-9]+=',
+          matchValue: {
+            '{{ a.repo.dart.reg-exp }}=': [
+              MatchPosition(line: 14, column: 1),
+              MatchPosition(line: 15, column: 1)
+            ],
+          },
+        ),
+        CheckResult(
+          filePath: r'.\test\case1\posts\1.md',
+          yamlKey: 'b.reg-exp3',
+          yamlValue: '[^0-9]+=+',
+          matchValue: {
+            '{{ a.repo.dart.reg-exp }}=+': [
+              MatchPosition(line: 15, column: 1),
+            ],
+            '{{ a.repo.reg-exp2 }}+': [MatchPosition(line: 16, column: 1)],
+            '{{a.repo.reg-exp2}}+': [MatchPosition(line: 17, column: 1)],
+            '{{   a.repo.reg-exp2 | xxx }}+': [
               MatchPosition(line: 19, column: 1)
             ],
           },
         ),
         CheckResult(
           filePath: r'.\test\case1\posts\2.md',
-          yamlKey: 'description',
+          yamlKey: 'a.description',
           yamlValue:
               'Dart is a client-optimized language for developing fast apps on any platform.',
           matchValue: {
@@ -72,7 +98,7 @@ void main() {
         ),
         CheckResult(
           filePath: r'.\test\case1\posts\2.md',
-          yamlKey: 'repo.dart.lang',
+          yamlKey: 'a.repo.dart.lang',
           yamlValue: '<p>123</p>\n<p>456</p>\n',
           matchValue: {
             '<p>123</p>\n<p>456</p>\n': [MatchPosition(line: 16, column: 1)],
@@ -80,7 +106,7 @@ void main() {
         ),
         CheckResult(
           filePath: r'.\test\case1\posts\2.md',
-          yamlKey: 'repo.dart.reg-exp',
+          yamlKey: 'a.repo.dart.reg-exp',
           yamlValue: '[^0-9]+',
           matchValue: {
             '[^0-9]+': [MatchPosition(line: 22, column: 1)],
@@ -88,10 +114,20 @@ void main() {
         ),
         CheckResult(
           filePath: r'.\test\case1\posts\2.md',
-          yamlKey: 'repo.reg-exp3',
+          yamlKey: 'a.repo.reg-exp3',
           yamlValue: '[^0-9]+=+',
           matchValue: {
-            '{{   site.repo.reg-exp2 | xxx }}+': [
+            '{{   a.repo.reg-exp2 | xxx }}+': [
+              MatchPosition(line: 23, column: 1)
+            ],
+          },
+        ),
+        CheckResult(
+          filePath: r'.\test\case1\posts\2.md',
+          yamlKey: 'b.reg-exp3',
+          yamlValue: '[^0-9]+=+',
+          matchValue: {
+            '{{   a.repo.reg-exp2 | xxx }}+': [
               MatchPosition(line: 23, column: 1)
             ],
           },
@@ -100,7 +136,6 @@ void main() {
       final List<CheckResult> checkResultAll = await YamlVariableScanner.run(
         './test/case1/yaml_variable_scanner.yaml',
         stdout,
-        prefix: (yamlKey) => 'site.$yamlKey',
         enablePrint: true,
       );
       expect(checkResultAll, checkResultAllExpect);

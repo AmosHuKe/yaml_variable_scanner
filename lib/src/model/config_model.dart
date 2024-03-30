@@ -9,9 +9,7 @@ class YamlVariableScannerConfig {
   });
 
   /// File path for YAML variables
-  ///
-  /// (Glob Syntax)
-  final List<String>? yamlFilePath;
+  final List<YamlFilePath>? yamlFilePath;
 
   /// Ignore Yaml file path
   ///
@@ -57,6 +55,38 @@ class YamlVariableScannerConfig {
       return false;
     }
     return other is YamlVariableScannerConfig && other.toString() == toString();
+  }
+
+  @override
+  int get hashCode => toString().hashCode;
+}
+
+class YamlFilePath {
+  const YamlFilePath({
+    required this.path,
+    required this.variablePrefix,
+  });
+
+  /// YAML path (Glob syntax)
+  final String path;
+
+  /// Variable prefix for deep variable checking.
+  /// e.g. `site.` -> `site.x.xx`
+  final String variablePrefix;
+
+  @override
+  String toString() =>
+      '$runtimeType(path: $path, variablePrefix: $variablePrefix)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is YamlFilePath && other.toString() == toString();
   }
 
   @override

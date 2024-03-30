@@ -17,7 +17,6 @@ final class CheckCommand extends Command<int> {
     final List<CheckResult> checkResultAll = await YamlVariableScanner.run(
       './yaml_variable_scanner.yaml',
       stdout,
-      prefix: (yamlKey) => 'site.$yamlKey',
     );
     if (checkResultAll.isNotEmpty) return 2;
     return 0;

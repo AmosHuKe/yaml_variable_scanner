@@ -1,21 +1,23 @@
 yaml_variable_scanner:
   yamlFilePath:
-    - "test/case1/site.yaml"
+    - path: "test/case1/siteA.yaml"
+      variablePrefix: "a."
+    - path: "test/case1/siteB.yaml"
+      variablePrefix: "b."
   ignoreYamlFilePath:
   ignoreYamlKey:
-    - repo.reg-exp$
+    - a.repo.reg-exp$
   checkFilePath:
     - "test/case1/**/*.md"
   ignoreCheckFilePath:
     - "test/case1/**/3.md"
   ignoreCheckText:
-    # --- 
-    # xxx
-    # ---
-    - ^---([\s\S]*?)---$
+    # --- xxx ---
+    - ^\s*---([\s\S]*?)---$
 
-    # {% comment %}
-    #   xxx
-    # {% endcomment %}
-    - ^{%\s*comment\s*%}([\s\S]*?){%\s*endcomment\s*%}$
+    # {%- comment %} xxx {% endcomment -%}
+    - ^\s*{%-?\s*comment\s*-?%}([\s\S]*?){%-?\s*endcomment\s*-?%}$
+
+    # <!-- xxx -->
+    - ^\s*<!---?\s*([\s\S]*?)\s*-?-->$
   

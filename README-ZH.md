@@ -112,8 +112,6 @@ YamlVariableScanner.run(
   /// yaml_variable_scanner 配置文件
   './yaml_variable_scanner.yaml',
   stdout,
-  /// 'site.$yamlKey' -> 'site.x.xxx'
-  prefix: (yamlKey) => 'site.$yamlKey',
 );
 ```
 
@@ -127,14 +125,15 @@ YamlVariableScanner.run(
 yaml_variable_scanner:
 
   # YAML 变量的文件路径
-  #
-  # (Glob 语法)
   yamlFilePath:
-    - "test/*.yaml"
+    - path: "test/siteA.yaml" # YAML 文件路径（Glob 语法）
+      variablePrefix: "a." # 变量前缀。例如： `a.` -> `a.x.xx`
+    - path: "test/siteB.yaml"
+      variablePrefix: "b."
 
   # 忽略 YAML 文件的路径
   #
-  # (Glob 语法)
+  # （Glob 语法）
   ignoreYamlFilePath:
     - "test/test.yaml"
 
@@ -142,39 +141,39 @@ yaml_variable_scanner:
   #
   # 例如："^a.bb$"
   #
-  # (RegExp 语法)
+  # （RegExp 语法）
   ignoreYamlKey:
     - ^description$
   
   # 检查文件内容的路径
   #
-  # (Glob 语法)
+  # （Glob 语法）
   checkFilePath:
     - "test/**/*.md"
 
   # 忽略需要检查的文件路径
   #
-  # (Glob 语法)
+  # （Glob 语法）
   ignoreCheckFilePath:
     - "test/content/**.md"
 
   # 忽略不需要匹配检查的文本
   #
   # 例如： 
-  # - `r"^---([\s\S]*?)---$"`
-  # - `r"^{%\s*comment\s*%}([\s\S]*?){%\s*endcomment\s*%}$"`
+  # - `r"^\s*---([\s\S]*?)---$"`
+  # - `r"^\s*{%-?\s*comment\s*-?%}([\s\S]*?){%-?\s*endcomment\s*-?%}$"`
+  # - `r"^\s*<!---?\s*([\s\S]*?)\s*-?-->$"`
   #
-  # (RegExp 语法)
+  # （RegExp 语法）
   ignoreCheckText:
-    # --- 
-    # xxx
-    # ---
-    - ^---([\s\S]*?)---$
+    # --- xxx ---
+    - ^\s*---([\s\S]*?)---$
 
-    # {% comment %}
-    #   xxx
-    # {% endcomment %}
-    - ^{%\s*comment\s*%}([\s\S]*?){%\s*endcomment\s*%}$
+    # {%- comment %} xxx {% endcomment -%}
+    - ^\s*{%-?\s*comment\s*-?%}([\s\S]*?){%-?\s*endcomment\s*-?%}$
+
+    # <!-- xxx -->
+    - ^\s*<!---?\s*([\s\S]*?)\s*-?-->$
 ```
 
 
@@ -185,7 +184,6 @@ yaml_variable_scanner:
 | --- | --- | --- | --- |
 | configPath <sup>`required`</sup> | `String` | - | [yaml_variable_scanner.yaml][] 配置文件路径。 |  
 | stdout <sup>`required`</sup> | `Stdout` | - | 来自 dart:io 的 stdout |  
-| prefix | `PrefixFunction?` | null | YAML 变量使用的前缀。 <br/> 例如：<br/> `(yamlKey) => 'site.$yamlKey'` <br/> 就可以检查文本中使用方式为 `{{ site.x.xx }}` 的变量。 |  
 | enablePrint | `bool` | true | 是否开启控制台打印结果。 |  
 
 
