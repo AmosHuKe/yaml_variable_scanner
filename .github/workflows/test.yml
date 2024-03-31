@@ -1,0 +1,60 @@
+name: "test"
+run-name: "Test"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - "example/**"
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - "example/**"
+
+jobs:
+
+  code_analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          channel: 'stable'
+      - name: Prepare dependencies
+        run: |
+          dart --version
+          dart pub get
+      - name: Check Dart code formatting
+        run: |
+          dart format . -o none --set-exit-if-changed
+      - name: Analyze Dart code
+        run: |
+          dart analyze .
+      - name: Generate dartdoc
+        run: |
+          dart pub global activate dartdoc
+          dart pub global run dartdoc .
+
+  test:
+    needs: [code_analysis]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        sdk: [3.3.0, stable]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+      - name: Prepare dependencies
+        run: |
+          dart --version
+          dart pub get
+      - name: Test
+        run: dart test
