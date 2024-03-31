@@ -138,7 +138,30 @@ void main() {
         stdout,
         enablePrint: true,
       );
-      expect(checkResultAll, checkResultAllExpect);
+      expect(
+        checkResultAll
+            .map(
+              (value) => CheckResult(
+                filePath: value.filePath.replaceAll(r'\', '/'),
+                yamlKey: value.yamlKey,
+                yamlValue: value.yamlValue,
+                matchValue: value.matchValue,
+              ),
+            )
+            .toList()
+          ..sort((a, b) => a.hashCode.compareTo(b.hashCode)),
+        checkResultAllExpect
+            .map(
+              (value) => CheckResult(
+                filePath: value.filePath.replaceAll(r'\', '/'),
+                yamlKey: value.yamlKey,
+                yamlValue: value.yamlValue,
+                matchValue: value.matchValue,
+              ),
+            )
+            .toList()
+          ..sort((a, b) => a.hashCode.compareTo(b.hashCode)),
+      );
     });
   });
 }
