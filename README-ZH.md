@@ -184,7 +184,7 @@ yaml_variable_scanner:
 | --- | --- | --- | --- |
 | configPath <sup>`required`</sup> | `String` | - | [yaml_variable_scanner.yaml][] 配置文件路径。 |  
 | stdout <sup>`required`</sup> | `Stdout` | - | 来自 dart:io 的 stdout |  
-| enablePrint | `bool` | true | 是否开启控制台打印结果。 |  
+| printMode | `PrintMode` | PrintMode.detail | 控制台打印模式。 |  
 
 
 ## 许可证 📄  

@@ -184,7 +184,7 @@ yaml_variable_scanner:
 | --- | --- | --- | --- |
 | configPath <sup>`required`</sup> | `String` | - | [yaml_variable_scanner.yaml][] config file path. |  
 | stdout <sup>`required`</sup> | `Stdout` | - | stdout from dart:io |  
-| enablePrint | `bool` | true | Enable console printing of results. |  
+| printMode | `PrintMode` | PrintMode.detail | Console Print Mode. |  
 
 
 ## License 📄  
