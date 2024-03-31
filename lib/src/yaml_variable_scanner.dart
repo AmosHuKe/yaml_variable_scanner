@@ -32,8 +32,7 @@ class YamlVariableScanner {
 
     /// Console
     Console.init();
-    final ProgressBar consoleProgressBar = ProgressBar();
-    final LoadingBar consoleLoadingBar = LoadingBar();
+    // final LoadingBar consoleLoadingBar = LoadingBar();
 
     /// Get configuration
     final YamlVariableScannerConfig scannerConfig =
@@ -52,18 +51,12 @@ class YamlVariableScanner {
       scannerConfig.ignoreCheckFilePath ?? [],
     );
 
-    /// Start check
-    for (final MapEntry<int, String>(
-          key: index,
-          value: filePath,
-        ) in filePathAll.asMap().entries) {
+    for (final String filePath in filePathAll) {
       /// Console Print (loading)
-      consoleLoadingBar.start();
-      print('Checking: $filePath');
-      consoleProgressBar.update(
-        (index / (filePathAll.length - 1) * 100).toInt(),
-      );
+      // consoleLoadingBar.start();
+      // print('Checking: $filePath');
 
+      /// Start check
       final List<CheckResult> checkResultAll = await VariableCheck(
         yamlVariableAll,
         filePath,
@@ -71,11 +64,11 @@ class YamlVariableScanner {
       ).run();
 
       /// Console Print (erase line)
-      consoleLoadingBar.stop();
-      for (int i = 0; i < 2; i++) {
-        Console.moveCursorUp();
-        Console.eraseLine();
-      }
+      // consoleLoadingBar.stop();
+      // for (int i = 0; i < 2; i++) {
+      //   Console.moveCursorUp();
+      //   Console.eraseLine();
+      // }
 
       if (checkResultAll.isNotEmpty) {
         checkResultList.addAll(checkResultAll);
@@ -89,6 +82,18 @@ class YamlVariableScanner {
     if (enablePrint) {
       _consolePrintStatisticCheckResult(print, checkResultList);
     }
+
+    /// Done
+    print('');
+    TextPen()
+        .lightMagenta()
+        .text('🌏 Done! ')
+        .normal()
+        .text(
+          'YAML Keys: ${yamlVariableAll.length}, Files: ${filePathAll.length}',
+        )
+        .print();
+    print('');
 
     return checkResultList;
   }
@@ -108,7 +113,7 @@ class YamlVariableScanner {
           .text(checkResult.filePath)
           .print();
       TextPen()
-          .gray()
+          .lightGray()
           .text('├── ')
           .normal()
           .text('🔍 [YAML Key]: ')
@@ -116,7 +121,7 @@ class YamlVariableScanner {
           .text(checkResult.yamlKey)
           .print();
       TextPen()
-          .gray()
+          .lightGray()
           .text('└── ')
           .normal()
           .text('🔍 [YAML Value]: ')
@@ -130,9 +135,9 @@ class YamlVariableScanner {
           isMatchValueLast = true;
         }
 
-        TextPen().gray().text('    │   ').print();
+        TextPen().lightGray().text('    │   ').print();
         final TextPen matchValuePen = TextPen();
-        matchValuePen.gray();
+        matchValuePen.lightGray();
         switch ([isMatchValueLast]) {
           case [false]:
             matchValuePen.text('    ├── ');
@@ -162,7 +167,7 @@ class YamlVariableScanner {
           }
 
           final TextPen matchPositionPen = TextPen();
-          matchPositionPen.gray();
+          matchPositionPen.lightGray();
           switch ([isMatchValueLast, isMatchPositionLast]) {
             case [false, true]:
               matchPositionPen.text('    │   └── ');
@@ -248,7 +253,7 @@ class YamlVariableScanner {
           }
 
           final TextPen matchValuePen = TextPen();
-          matchValuePen.gray();
+          matchValuePen.lightGray();
           switch ([isMatchValueLast]) {
             case [false]:
               matchValuePen.text('    ├── ');

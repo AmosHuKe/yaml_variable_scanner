@@ -3,6 +3,13 @@
 > [!IMPORTANT]  
 > See the [Migration Guide](guides/migration_guide.md) for the details of breaking changes between versions.
 
+## 0.0.3
+
+### Improvements
+
+- Improve basic statistics.
+- Remove console print loading.
+
 ## 0.0.2
 
 ### Improvements
