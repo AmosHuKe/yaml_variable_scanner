@@ -7,7 +7,7 @@ class YamlVariable {
 
   /// YAML Key
   ///
-  /// e.g. aa.bb.cc, aa.bb[0], aa.bb[1]
+  /// e.g. `aa.bb.cc`, `aa.bb[0]`, `aa.bb[1]`
   final String key;
 
   /// YAML Value
