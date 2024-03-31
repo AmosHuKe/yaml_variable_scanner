@@ -29,6 +29,8 @@ class YamlVariableScanner {
     void print(Object message) => stdout.writeln(message);
 
     final List<CheckResult> checkResultList = [];
+    int replaceableContentsTotal = 0;
+    int relatedFilesTotal = 0;
 
     /// Console
     Console.init();
@@ -51,49 +53,44 @@ class YamlVariableScanner {
       scannerConfig.ignoreCheckFilePath ?? [],
     );
 
+    /// Start check
     for (final String filePath in filePathAll) {
-      /// Console Print (loading)
-      // consoleLoadingBar.start();
-      // print('Checking: $filePath');
-
-      /// Start check
       final List<CheckResult> checkResultAll = await VariableCheck(
         yamlVariableAll,
         filePath,
         ignoreCheckText: scannerConfig.ignoreCheckText ?? [],
       ).run();
 
-      /// Console Print (erase line)
-      // consoleLoadingBar.stop();
-      // for (int i = 0; i < 2; i++) {
-      //   Console.moveCursorUp();
-      //   Console.eraseLine();
-      // }
-
       if (checkResultAll.isNotEmpty) {
         checkResultList.addAll(checkResultAll);
 
+        relatedFilesTotal++;
+        for (final checkResult in checkResultAll) {
+          for (final matchValue in checkResult.matchValue.entries) {
+            replaceableContentsTotal += matchValue.value.length;
+          }
+        }
+
         if (enablePrint) {
+          /// Results per file
           _consolePrintCheckResult(print, checkResultAll);
         }
       }
     }
 
     if (enablePrint) {
+      /// Total statistics
       _consolePrintStatisticCheckResult(print, checkResultList);
     }
 
     /// Done
-    print('');
-    TextPen()
-        .lightMagenta()
-        .text('🌏 Done! ')
-        .normal()
-        .text(
-          'YAML Keys: ${yamlVariableAll.length}, Files: ${filePathAll.length}',
-        )
-        .print();
-    print('');
+    _consolePrintDoneStats(
+      print,
+      allVariables: yamlVariableAll.length,
+      allFiles: filePathAll.length,
+      replaceableContents: replaceableContentsTotal,
+      relatedFiles: relatedFilesTotal,
+    );
 
     return checkResultList;
   }
@@ -113,18 +110,18 @@ class YamlVariableScanner {
           .text(checkResult.filePath)
           .print();
       TextPen()
-          .lightGray()
+          .normal()
           .text('├── ')
           .normal()
-          .text('🔍 [YAML Key]: ')
+          .text('🔍 [Variable Key]: ')
           .normal()
           .text(checkResult.yamlKey)
           .print();
       TextPen()
-          .lightGray()
+          .normal()
           .text('└── ')
           .normal()
-          .text('🔍 [YAML Value]: ')
+          .text('🔍 [Variable Value]: ')
           .normal()
           .text(checkResult.yamlValue)
           .print();
@@ -135,26 +132,46 @@ class YamlVariableScanner {
           isMatchValueLast = true;
         }
 
-        TextPen().lightGray().text('    │   ').print();
-        final TextPen matchValuePen = TextPen();
-        matchValuePen.lightGray();
-        switch ([isMatchValueLast]) {
-          case [false]:
-            matchValuePen.text('    ├── ');
-            break;
-          case [true]:
-            matchValuePen.text('    └── ');
-            break;
-        }
-        matchValuePen
+        TextPen().normal().text('    │   ').print();
+
+        /// Replaceable content
+        TextPen()
             .normal()
-            .text('📄 [Match Content ')
+            .text('    ├── ')
+            .normal()
+            .text('📄 [Replaceable content ')
             .blue()
             .text('(total ${matchValue.value.length})')
             .normal()
             .text(']: ')
             .normal()
             .text(matchValue.key)
+            .print();
+
+        /// Suggestion
+        final TextPen suggestionPen = TextPen();
+        suggestionPen.normal();
+        switch ([isMatchValueLast]) {
+          case [false]:
+            suggestionPen.text('    ├── ');
+            break;
+          case [true]:
+            suggestionPen.text('    └── ');
+            break;
+        }
+        suggestionPen
+            .yellow()
+            .text('💡 [Suggestion]: ')
+            .normal()
+            .text('Replace all "')
+            .yellow()
+            .text(matchValue.key)
+            .normal()
+            .text('" with "')
+            .yellow()
+            .text('{{${checkResult.yamlKey}}}')
+            .normal()
+            .text('"')
             .print();
 
         for (final MapEntry<int, MatchPosition>(
@@ -167,7 +184,7 @@ class YamlVariableScanner {
           }
 
           final TextPen matchPositionPen = TextPen();
-          matchPositionPen.lightGray();
+          matchPositionPen.normal();
           switch ([isMatchValueLast, isMatchPositionLast]) {
             case [false, true]:
               matchPositionPen.text('    │   └── ');
@@ -225,23 +242,23 @@ class YamlVariableScanner {
     }
 
     if (statisticCheckResultAll.isNotEmpty) {
-      final TextPen divider = TextPen()
-          .lightMagenta()
-          .text('========================================');
-
+      final TextPen divider = TextPen().lightMagenta().text(
+            '[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>]',
+          );
+      print('');
       TextPen().lightMagenta().text('🌏 [Total statistics]:').print();
       divider.print();
       for (final statisticCheckResult in statisticCheckResultAll.entries) {
         print('');
         TextPen()
             .normal()
-            .text('  🔍 [YAML Key]: ')
+            .text('  🔍 [Variable Key]: ')
             .normal()
             .text(statisticCheckResult.key.key)
             .print();
         TextPen()
             .normal()
-            .text('  🔍 [YAML Value]: ')
+            .text('  🔍 [Variable Value]: ')
             .normal()
             .text(statisticCheckResult.key.value)
             .print();
@@ -252,19 +269,14 @@ class YamlVariableScanner {
             isMatchValueLast = true;
           }
 
-          final TextPen matchValuePen = TextPen();
-          matchValuePen.lightGray();
-          switch ([isMatchValueLast]) {
-            case [false]:
-              matchValuePen.text('    ├── ');
-              break;
-            case [true]:
-              matchValuePen.text('    └── ');
-              break;
-          }
-          matchValuePen
+          TextPen().normal().text('    │   ').print();
+
+          /// Replaceable content
+          TextPen()
               .normal()
-              .text('📄 [Match Content ')
+              .text('    ├── ')
+              .normal()
+              .text('📄 [Replaceable content ')
               .blue()
               .text('(total ${matchValue.value})')
               .normal()
@@ -272,10 +284,69 @@ class YamlVariableScanner {
               .normal()
               .text(matchValue.key)
               .print();
+
+          /// Suggestion
+          final TextPen suggestionPen = TextPen();
+          suggestionPen.normal();
+          switch ([isMatchValueLast]) {
+            case [false]:
+              suggestionPen.text('    ├── ');
+              break;
+            case [true]:
+              suggestionPen.text('    └── ');
+              break;
+          }
+          suggestionPen
+              .yellow()
+              .text('💡 [Suggestion]: ')
+              .normal()
+              .text('Replace all "')
+              .yellow()
+              .text(matchValue.key)
+              .normal()
+              .text('" with "')
+              .yellow()
+              .text('{{${statisticCheckResult.key.key}}}')
+              .normal()
+              .text('"')
+              .print();
         }
+        print('');
       }
       print('');
       divider.print();
     }
+  }
+
+  /// Console Print Done Stats
+  static void _consolePrintDoneStats(
+    void Function(Object message) print, {
+    required int allVariables,
+    required int allFiles,
+    required int replaceableContents,
+    required int relatedFiles,
+  }) {
+    Console.init();
+
+    print('');
+    TextPen().lightMagenta().text('🌏  Done! ').print();
+
+    /// Total scanned
+    TextPen().blue().text('    Total scanned: ').print();
+    TextPen()
+        .normal()
+        .text('    ├── All variables: $allVariables (YAML Key)')
+        .print();
+    TextPen().normal().text('    └── All files: $allFiles').print();
+    print('');
+
+    /// Issues
+    TextPen().yellow().text('    Issues: ').print();
+    TextPen()
+        .normal()
+        .text(
+            '    └── Replaceable contents: $replaceableContents (Related files: $relatedFiles)')
+        .print();
+    print('');
   }
 }
