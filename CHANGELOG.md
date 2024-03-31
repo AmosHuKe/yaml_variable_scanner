@@ -5,6 +5,10 @@
 
 ## 0.0.4
 
+### New features
+
+- Add console print mode.
+
 ### Improvements
 
 - Improve console print (e.g. suggestion).

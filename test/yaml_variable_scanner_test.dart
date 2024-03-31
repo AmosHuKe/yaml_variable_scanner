@@ -136,7 +136,7 @@ void main() {
       final List<CheckResult> checkResultAll = await YamlVariableScanner.run(
         './test/case1/yaml_variable_scanner.yaml',
         stdout,
-        enablePrint: true,
+        printMode: PrintMode.detailAndStats,
       );
       expect(
         checkResultAll

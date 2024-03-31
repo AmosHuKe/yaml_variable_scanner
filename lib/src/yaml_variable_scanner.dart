@@ -11,6 +11,20 @@ import 'model/config_model.dart';
 import 'model/yaml_model.dart';
 import 'model/check_model.dart';
 
+enum PrintMode {
+  /// No content
+  none,
+
+  /// Detail to file lines and columns
+  detail,
+
+  /// Total statistics
+  stats,
+
+  /// Detail & Stats
+  detailAndStats,
+}
+
 /// YAML Variable Scanner
 class YamlVariableScanner {
   const YamlVariableScanner._();
@@ -19,12 +33,12 @@ class YamlVariableScanner {
   ///
   /// - [configPath] `yaml_variable_scanner.yaml` config file path
   /// - [stdout] stdout from dart:io
-  /// - [enablePrint] Enable console printing of results
+  /// - [printMode] Console Print Mode [PrintMode]
   ///
   static Future<List<CheckResult>> run(
     String configPath,
     Stdout stdout, {
-    enablePrint = true,
+    PrintMode printMode = PrintMode.detail,
   }) async {
     void print(Object message) => stdout.writeln(message);
 
@@ -71,14 +85,15 @@ class YamlVariableScanner {
           }
         }
 
-        if (enablePrint) {
+        if (printMode == PrintMode.detail ||
+            printMode == PrintMode.detailAndStats) {
           /// Results per file
           _consolePrintCheckResult(print, checkResultAll);
         }
       }
     }
 
-    if (enablePrint) {
+    if (printMode == PrintMode.stats || printMode == PrintMode.detailAndStats) {
       /// Total statistics
       _consolePrintStatisticCheckResult(print, checkResultList);
     }
