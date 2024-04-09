@@ -139,7 +139,7 @@ yaml_variable_scanner:
 
   # 忽略 YAML Key
   #
-  # 例如："^a.bb$"
+  # 例如："^a\.bb$"
   #
   # （RegExp 语法）
   ignoreYamlKey:

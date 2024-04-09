@@ -15,7 +15,7 @@ yaml_variable_scanner:
 
   # Ignore YAML Key
   #
-  # e.g. "^a.bb$"
+  # e.g. "^a\.bb$"
   #
   # (RegExp Syntax)
   ignoreYamlKey:

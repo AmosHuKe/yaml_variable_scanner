@@ -18,7 +18,7 @@ class YamlVariableScannerConfig {
 
   /// Ignore YAML Key
   ///
-  /// e.g. "^a.bb$"
+  /// e.g. "^a\.bb$"
   ///
   /// (RegExp Syntax)
   final List<String>? ignoreYamlKey;

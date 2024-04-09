@@ -6,7 +6,7 @@ yaml_variable_scanner:
       variablePrefix: "b."
   ignoreYamlFilePath:
   ignoreYamlKey:
-    - a.repo.reg-exp$
+    - ^a\.repo\.reg-exp$
   checkFilePath:
     - "test/case1/**/*.md"
   ignoreCheckFilePath:
