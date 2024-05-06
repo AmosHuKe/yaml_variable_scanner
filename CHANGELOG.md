@@ -3,6 +3,12 @@
 > [!IMPORTANT]  
 > See the [Migration Guide](guides/migration_guide.md) for the details of breaking changes between versions.
 
+## 0.0.6 (WIP)
+
+### Improvements
+
+Update dev_dependencies version.
+
 ## 0.0.5
 
 ### Improvements
