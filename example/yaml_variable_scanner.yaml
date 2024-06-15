@@ -18,6 +18,6 @@ yaml_variable_scanner:
     # <!-- xxx -->
     - ^\s*<!---?\s*([\s\S]*?)\s*-?-->$
 
-    # <!-- ignore-variable-check-start --> xxx <!-- ignore-variable-check-end -->
-    - ^\s*<!---?\s*ignore-variable-check-start\s*-?-->([\s\S]*?)<!---?\s*ignore-variable-check-end\s*-?-->$
+    # <!-- ignore-variable-check-begin --> xxx <!-- ignore-variable-check-end -->
+    - ^\s*<!---?\s*ignore-variable-check-begin\s*-?-->([\s\S]*?)<!---?\s*ignore-variable-check-end\s*-?-->$
   
