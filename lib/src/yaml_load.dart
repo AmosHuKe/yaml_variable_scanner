@@ -134,13 +134,11 @@ class YamlLoad with FileLoad {
         for (final entry in collections.entries) {
           _flattenCollection(entry.value, '$prefix${entry.key}.', result);
         }
-        break;
       case List _:
         for (int i = 0; i < collections.length; i++) {
           final listPrefix = '${prefix.replaceFirst(RegExp(r'\.$'), '')}[$i].';
           _flattenCollection(collections[i], listPrefix, result);
         }
-        break;
       default:
         if (collections != null) {
           result[prefix.substring(0, prefix.length - 1)] =

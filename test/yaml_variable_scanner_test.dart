@@ -7,7 +7,7 @@ import 'package:yaml_variable_scanner/yaml_variable_scanner.dart';
 void main() {
   group('YamlVariableScanner Test', () {
     test('Check case1', () async {
-      final List<CheckResult> checkResultAllExpect = [
+      const List<CheckResult> checkResultAllExpect = [
         CheckResult(
           filePath: r'.\test\case1\posts\1.md',
           yamlKey: 'a.description',
@@ -41,7 +41,7 @@ void main() {
           matchValue: {
             '{{ a.repo.dart.reg-exp }}=': [
               MatchPosition(line: 14, column: 1),
-              MatchPosition(line: 15, column: 1)
+              MatchPosition(line: 15, column: 1),
             ],
           },
         ),
@@ -56,7 +56,7 @@ void main() {
             '{{ a.repo.reg-exp2 }}+': [MatchPosition(line: 16, column: 1)],
             '{{a.repo.reg-exp2}}+': [MatchPosition(line: 17, column: 1)],
             '{{   a.repo.reg-exp2 | xxx }}+': [
-              MatchPosition(line: 19, column: 1)
+              MatchPosition(line: 19, column: 1),
             ],
           },
         ),
@@ -67,7 +67,7 @@ void main() {
           matchValue: {
             '{{ a.repo.dart.reg-exp }}=': [
               MatchPosition(line: 14, column: 1),
-              MatchPosition(line: 15, column: 1)
+              MatchPosition(line: 15, column: 1),
             ],
           },
         ),
@@ -82,7 +82,7 @@ void main() {
             '{{ a.repo.reg-exp2 }}+': [MatchPosition(line: 16, column: 1)],
             '{{a.repo.reg-exp2}}+': [MatchPosition(line: 17, column: 1)],
             '{{   a.repo.reg-exp2 | xxx }}+': [
-              MatchPosition(line: 19, column: 1)
+              MatchPosition(line: 19, column: 1),
             ],
           },
         ),
@@ -118,7 +118,7 @@ void main() {
           yamlValue: '[^0-9]+=+',
           matchValue: {
             '{{   a.repo.reg-exp2 | xxx }}+': [
-              MatchPosition(line: 23, column: 1)
+              MatchPosition(line: 23, column: 1),
             ],
           },
         ),
@@ -128,7 +128,7 @@ void main() {
           yamlValue: '[^0-9]+=+',
           matchValue: {
             '{{   a.repo.reg-exp2 | xxx }}+': [
-              MatchPosition(line: 23, column: 1)
+              MatchPosition(line: 23, column: 1),
             ],
           },
         ),

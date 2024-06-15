@@ -7,7 +7,8 @@
 
 ### Improvements
 
-Update dev_dependencies version.
+- Update dev_dependencies version.
+- Improve code formatting.
 
 ## 0.0.5
 

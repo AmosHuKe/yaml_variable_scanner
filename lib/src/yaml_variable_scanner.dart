@@ -166,14 +166,12 @@ class YamlVariableScanner {
         /// Suggestion
         final TextPen suggestionPen = TextPen();
         suggestionPen.normal();
-        switch ([isMatchValueLast]) {
-          case [false]:
-            suggestionPen.text('    ├── ');
-            break;
-          case [true]:
-            suggestionPen.text('    └── ');
-            break;
-        }
+        suggestionPen.text(
+          switch (isMatchValueLast) {
+            false => '    ├── ',
+            true => '    └── ',
+          },
+        );
         suggestionPen
             .yellow()
             .text('💡 [Suggestion]: ')
@@ -200,24 +198,15 @@ class YamlVariableScanner {
 
           final TextPen matchPositionPen = TextPen();
           matchPositionPen.normal();
-          switch ([isMatchValueLast, isMatchPositionLast]) {
-            case [false, true]:
-              matchPositionPen.text('    │   └── ');
-              break;
-            case [false, false]:
-              matchPositionPen.text('    │   ├── ');
-              break;
-            case [true, false]:
-              matchPositionPen.text('        ├── ');
-              break;
-            case [true, true]:
-              matchPositionPen.text('        └── ');
-              break;
-            default:
-              matchPositionPen.text('        └── ');
-              break;
-          }
-
+          matchPositionPen.text(
+            switch ([isMatchValueLast, isMatchPositionLast]) {
+              [false, true] => '    │   └── ',
+              [false, false] => '    │   ├── ',
+              [true, false] => '        ├── ',
+              [true, true] => '        └── ',
+              _ => '        └── ',
+            },
+          );
           matchPositionPen
               .normal()
               .text(checkResult.filePath)
@@ -303,14 +292,12 @@ class YamlVariableScanner {
           /// Suggestion
           final TextPen suggestionPen = TextPen();
           suggestionPen.normal();
-          switch ([isMatchValueLast]) {
-            case [false]:
-              suggestionPen.text('    ├── ');
-              break;
-            case [true]:
-              suggestionPen.text('    └── ');
-              break;
-          }
+          suggestionPen.text(
+            switch (isMatchValueLast) {
+              false => '    ├── ',
+              true => '    └── ',
+            },
+          );
           suggestionPen
               .yellow()
               .text('💡 [Suggestion]: ')
@@ -360,7 +347,8 @@ class YamlVariableScanner {
     TextPen()
         .normal()
         .text(
-            '    └── Replaceable contents: $replaceableContents (Related files: $relatedFiles)')
+          '    └── Replaceable contents: $replaceableContents (Related files: $relatedFiles)',
+        )
         .print();
     print('');
   }

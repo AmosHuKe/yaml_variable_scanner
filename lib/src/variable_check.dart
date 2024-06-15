@@ -55,7 +55,7 @@ class VariableCheck with FileLoad {
             );
             matchValueMap.addAll({
               matchContent: [
-                ...(matchValueMap[matchContent] ?? []),
+                ...matchValueMap[matchContent] ?? [],
                 matchPosition,
               ],
             });
@@ -86,7 +86,7 @@ class VariableCheck with FileLoad {
     bool isIgnore = false;
     for (final String regExpIgnoreText in ignoreCheckText) {
       final RegExp regExp = RegExp(regExpIgnoreText, multiLine: true);
-      Iterable<Match> matches = regExp.allMatches(text);
+      final Iterable<Match> matches = regExp.allMatches(text);
       for (final Match match in matches) {
         if (matchStart >= match.start && matchEnd <= match.end) {
           isIgnore = true;
