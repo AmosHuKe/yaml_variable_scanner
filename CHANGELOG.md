@@ -3,7 +3,7 @@
 > [!IMPORTANT]  
 > See the [Migration Guide](guides/migration_guide.md) for the details of breaking changes between versions.
 
-## 0.0.6 (WIP)
+## 0.0.6 (Unreleased)
 
 ### Improvements
 
