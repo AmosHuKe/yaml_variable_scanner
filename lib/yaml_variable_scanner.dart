@@ -1,4 +1,6 @@
 /// YAML Variable Scanner
+
+// ignore: unnecessary_library_name
 library yaml_variable_scanner;
 
 export 'src/yaml_variable_scanner.dart';
