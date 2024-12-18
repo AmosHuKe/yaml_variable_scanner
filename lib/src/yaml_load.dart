@@ -64,7 +64,9 @@ class YamlLoad with FileLoad {
 
       for (final yamlMatch in yamlAll.entries) {
         if (yamlVariable.key == yamlMatch.key ||
-            yamlVariable.value == yamlMatch.value) continue;
+            yamlVariable.value == yamlMatch.value) {
+          continue;
+        }
 
         final String yamlMatchValue = yamlMatch.value.escapedPatternValue;
         final RegExp regExp = RegExp(r'' + yamlMatchValue);
@@ -144,7 +146,6 @@ class YamlLoad with FileLoad {
           result[prefix.substring(0, prefix.length - 1)] =
               collections.toString();
         }
-        break;
     }
   }
 }
