@@ -9,8 +9,8 @@ environment:
 dependencies:
   yaml_variable_scanner:
     path: ../
-  io: ^1.0.4
-  args: ^2.4.2
+  io: ^1.0.5
+  args: ^2.7.0
 
 dev_dependencies:
   lints: any
