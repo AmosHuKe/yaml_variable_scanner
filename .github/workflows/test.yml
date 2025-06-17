@@ -16,12 +16,20 @@ on:
       - "**.md"
       - "example/**"
 
-jobs:
+env:
+  repo_sparse_checkout: |
+    /*
+    !/example/
 
+jobs:
   code_analysis:
+    name: "Code Analysis :: Dart (latest)"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: ${{ env.repo_sparse_checkout }}
+          sparse-checkout-cone-mode: false
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: 'stable'
@@ -42,6 +50,7 @@ jobs:
 
   test:
     needs: [code_analysis]
+    name: "Test :: ${{ matrix.os }} :: Dart (${{ matrix.sdk }})"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -49,6 +58,9 @@ jobs:
         sdk: [3.3.0, stable]
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: ${{ env.repo_sparse_checkout }}
+          sparse-checkout-cone-mode: false
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ matrix.sdk }}
