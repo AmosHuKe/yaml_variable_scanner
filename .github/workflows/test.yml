@@ -26,7 +26,7 @@ jobs:
     name: "Code Analysis :: Dart (latest)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           sparse-checkout: ${{ env.repo_sparse_checkout }}
           sparse-checkout-cone-mode: false
@@ -57,7 +57,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         sdk: [3.3.0, stable]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           sparse-checkout: ${{ env.repo_sparse_checkout }}
           sparse-checkout-cone-mode: false
