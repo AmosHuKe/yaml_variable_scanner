@@ -16,6 +16,9 @@ on:
       - "**.md"
       - "example/**"
 
+# Disable permissions for all of the available permissions
+permissions: {}
+
 env:
   repo_sparse_checkout: |
     /*
