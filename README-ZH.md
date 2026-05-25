@@ -55,7 +55,7 @@
 ## 特性 ✨
 
 > [!IMPORTANT]  
-> 目前仅适用于以下变量使用方式的检查：  
+> 目前仅对以下模板语法进行检查：  
 > - `{{ x.xx.xxx }}`  
 
 - 📂 可指定多文件（Glob 语法）
@@ -80,9 +80,9 @@ $ dart run example check
 ## 安装 🎯
 ### 版本兼容 🐦  
 
-| Flutter / Dart               | 3.19.0+ / 3.3.0+   |  
-| ---                          | :----------------: |  
-| yaml_variable_scanner 0.0.1+ | ✅                 |  
+| Dart                         | 3.3.0+ |
+| ---------------------------- | :----: |
+| yaml_variable_scanner 0.0.1+ |   ✅   |
 
 
 ### 添加 yaml_variable_scanner 📦  
@@ -180,11 +180,11 @@ yaml_variable_scanner:
 ## 使用 📖  
 ### `YamlVariableScanner.run()` 参数 🤖  
 
-| 参数名 | 类型 | 默认值 | 描述 |  
-| --- | --- | --- | --- |
-| configPath <sup>`required`</sup> | `String` | - | [yaml_variable_scanner.yaml][] 配置文件路径。 |  
-| stdout <sup>`required`</sup> | `Stdout` | - | 来自 dart:io 的 stdout |  
-| printMode | `PrintMode` | PrintMode.detail | 控制台打印模式。 |  
+| 参数名                           | 类型        | 默认值           | 描述                                          |
+| -------------------------------- | ----------- | ---------------- | --------------------------------------------- |
+| configPath <sup>`required`</sup> | `String`    | -                | [yaml_variable_scanner.yaml][] 配置文件路径。 |
+| stdout <sup>`required`</sup>     | `Stdout`    | -                | 来自 dart:io 的 stdout                        |
+| printMode                        | `PrintMode` | PrintMode.detail | 控制台打印模式。                              |
 
 
 ## 许可证 📄  

@@ -55,7 +55,7 @@
 ## Features ✨  
 
 > [!IMPORTANT]  
-> Currently, only the following variables support checking:  
+> Currently, only the following template syntax support checking:  
 > - `{{ x.xx.xxx }}`  
 
 - 📂 Multiple files can be specified (Glob syntax)
@@ -80,9 +80,9 @@ $ dart run example check
 ## Install 🎯
 ### Versions compatibility 🐦  
 
-| Flutter / Dart               | 3.19.0+ / 3.3.0+   |  
-| ---                          | :----------------: |  
-| yaml_variable_scanner 0.0.1+ | ✅                 |  
+| Dart                         | 3.3.0+ |
+| ---------------------------- | :----: |
+| yaml_variable_scanner 0.0.1+ |   ✅   |
 
 
 ### Add package 📦  
@@ -180,11 +180,11 @@ yaml_variable_scanner:
 ## Usage 📖  
 ### `YamlVariableScanner.run()` parameters 🤖  
 
-| Parameter | Type | Default | Description |  
-| --- | --- | --- | --- |
-| configPath <sup>`required`</sup> | `String` | - | [yaml_variable_scanner.yaml][] config file path. |  
-| stdout <sup>`required`</sup> | `Stdout` | - | stdout from dart:io |  
-| printMode | `PrintMode` | PrintMode.detail | Console Print Mode. |  
+| Parameter                        | Type        | Default          | Description                                      |
+| -------------------------------- | ----------- | ---------------- | ------------------------------------------------ |
+| configPath <sup>`required`</sup> | `String`    | -                | [yaml_variable_scanner.yaml][] config file path. |
+| stdout <sup>`required`</sup>     | `Stdout`    | -                | stdout from dart:io                              |
+| printMode                        | `PrintMode` | PrintMode.detail | Console Print Mode.                              |
 
 
 ## License 📄  
