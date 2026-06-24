@@ -83,3 +83,10 @@ coverage/
 
 # Github
 .github/
+
+# screenshots
+README/*
+
+# example
+example/*
+!example/example.md
