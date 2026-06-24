@@ -29,9 +29,22 @@ class YamlVariable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is YamlVariable && other.toString() == toString();
+    return other is YamlVariable &&
+        other.key == key &&
+        other.value == value &&
+        _stringListEquals(matchValue, other.matchValue);
   }
 
   @override
-  int get hashCode => toString().hashCode;
+  int get hashCode => Object.hash(key, value, Object.hashAll(matchValue));
+}
+
+/// Whether two lists of strings are equal element-by-element.
+bool _stringListEquals(List<String> a, List<String> b) {
+  if (identical(a, b)) return true;
+  if (a.length != b.length) return false;
+  for (int i = 0; i < a.length; i++) {
+    if (a[i] != b[i]) return false;
+  }
+  return true;
 }
