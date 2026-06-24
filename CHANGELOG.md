@@ -19,6 +19,8 @@
 - Skip unreadable files instead of scanning partial content.
 - Validate config with clear `FormatException`s.
 
+PR: [#8](https://github.com/AmosHuKe/yaml_variable_scanner/pull/8)
+
 ## 0.0.7
 
 ### Improvements
