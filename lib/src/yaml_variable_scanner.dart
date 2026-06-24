@@ -62,20 +62,41 @@ class YamlVariableScanner {
     ).getVariable();
 
     /// Get directory files to scan
-    final List<String> filePathAll = FileLoad().getFilePath(
+    final List<String> filePathAll = FileLoad.getFilePath(
       scannerConfig.checkFilePath ?? [],
       scannerConfig.ignoreCheckFilePath ?? [],
     );
 
     /// Start check
-    for (final String filePath in filePathAll) {
-      final List<CheckResult> checkResultAll = await VariableCheck(
-        yamlVariableAll,
-        filePath,
-        ignoreCheckText: scannerConfig.ignoreCheckText ?? [],
-      ).run();
+    ///
+    /// Shared across all files so each ignore/match pattern is compiled once.
+    final Map<String, RegExp> regExpCache = {};
 
-      if (checkResultAll.isNotEmpty) {
+    /// Scan files concurrently in bounded batches.
+    ///
+    /// File scans are independent and I/O-bound, so overlapping them is faster;
+    /// the batch size caps how many files are open at once
+    /// (avoiding handle exhaustion on large file sets).
+    /// Results are consumed in the original file order,
+    /// so the accumulation and printing order stays identical to a sequential scan.
+    const int batchSize = 16;
+    for (int start = 0; start < filePathAll.length; start += batchSize) {
+      final int end = start + batchSize < filePathAll.length
+          ? start + batchSize
+          : filePathAll.length;
+      final List<List<CheckResult>> batchResults = await Future.wait([
+        for (int i = start; i < end; i++)
+          VariableCheck(
+            yamlVariableAll,
+            filePathAll[i],
+            ignoreCheckText: scannerConfig.ignoreCheckText ?? [],
+            regExpCache: regExpCache,
+          ).run(),
+      ]);
+
+      for (final List<CheckResult> checkResultAll in batchResults) {
+        if (checkResultAll.isEmpty) continue;
+
         checkResultList.addAll(checkResultAll);
 
         relatedFilesTotal++;

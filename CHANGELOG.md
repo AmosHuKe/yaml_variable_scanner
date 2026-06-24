@@ -3,6 +3,24 @@
 > [!IMPORTANT]  
 > See the [Migration Guide](guides/migration_guide.md) for the details of breaking changes between versions.
 
+## 0.1.0
+
+### Breaking
+
+- Trim the public API: now exports only `YamlVariableScanner`, `PrintMode`, and the model types.
+
+### Improvements
+
+- Faster scanning: read each file once, cache compiled `RegExp`/`Glob`, 
+  pre-compute ignore ranges per file, and scan files concurrently.
+
+### Fixes
+
+- Skip unreadable files instead of scanning partial content.
+- Validate config with clear `FormatException`s.
+
+PR: [#8](https://github.com/AmosHuKe/yaml_variable_scanner/pull/8)
+
 ## 0.0.7
 
 ### Improvements

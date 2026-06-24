@@ -4,12 +4,16 @@ import 'package:test/test.dart';
 
 import 'package:yaml_variable_scanner/yaml_variable_scanner.dart';
 
+/// End-to-end check of [YamlVariableScanner.run] against the `case1` fixture.
+///
+/// See `test/case1/README.md` for what the fixture covers.
 void main() {
-  group('YamlVariableScanner Test', () {
-    test('Check case1', () async {
-      const List<CheckResult> checkResultAllExpect = [
+  group('YamlVariableScanner.run() — case1 integration', () {
+    test('reports every replaceable content across the scanned files',
+        () async {
+      const List<CheckResult> expected = [
         CheckResult(
-          filePath: r'.\test\case1\posts\1.md',
+          filePath: './test/case1/posts/1.md',
           yamlKey: 'a.description',
           yamlValue:
               'Dart is a client-optimized language for developing fast apps on any platform.',
@@ -19,7 +23,7 @@ void main() {
           },
         ),
         CheckResult(
-          filePath: r'.\test\case1\posts\1.md',
+          filePath: './test/case1/posts/1.md',
           yamlKey: 'a.repo.dart.lang',
           yamlValue: '<p>123</p>\n<p>456</p>\n',
           matchValue: {
@@ -27,7 +31,7 @@ void main() {
           },
         ),
         CheckResult(
-          filePath: r'.\test\case1\posts\1.md',
+          filePath: './test/case1/posts/1.md',
           yamlKey: 'a.repo.dart.reg-exp',
           yamlValue: '[^0-9]+',
           matchValue: {
@@ -35,7 +39,7 @@ void main() {
           },
         ),
         CheckResult(
-          filePath: r'.\test\case1\posts\1.md',
+          filePath: './test/case1/posts/1.md',
           yamlKey: 'a.repo.reg-exp2',
           yamlValue: '[^0-9]+=',
           matchValue: {
@@ -46,7 +50,7 @@ void main() {
           },
         ),
         CheckResult(
-          filePath: r'.\test\case1\posts\1.md',
+          filePath: './test/case1/posts/1.md',
           yamlKey: 'a.repo.reg-exp3',
           yamlValue: '[^0-9]+=+',
           matchValue: {
@@ -61,7 +65,7 @@ void main() {
           },
         ),
         CheckResult(
-          filePath: r'.\test\case1\posts\1.md',
+          filePath: './test/case1/posts/1.md',
           yamlKey: 'b.reg-exp2',
           yamlValue: '[^0-9]+=',
           matchValue: {
@@ -72,7 +76,7 @@ void main() {
           },
         ),
         CheckResult(
-          filePath: r'.\test\case1\posts\1.md',
+          filePath: './test/case1/posts/1.md',
           yamlKey: 'b.reg-exp3',
           yamlValue: '[^0-9]+=+',
           matchValue: {
@@ -87,7 +91,7 @@ void main() {
           },
         ),
         CheckResult(
-          filePath: r'.\test\case1\posts\2.md',
+          filePath: './test/case1/posts/2.md',
           yamlKey: 'a.description',
           yamlValue:
               'Dart is a client-optimized language for developing fast apps on any platform.',
@@ -97,7 +101,7 @@ void main() {
           },
         ),
         CheckResult(
-          filePath: r'.\test\case1\posts\2.md',
+          filePath: './test/case1/posts/2.md',
           yamlKey: 'a.repo.dart.lang',
           yamlValue: '<p>123</p>\n<p>456</p>\n',
           matchValue: {
@@ -105,7 +109,7 @@ void main() {
           },
         ),
         CheckResult(
-          filePath: r'.\test\case1\posts\2.md',
+          filePath: './test/case1/posts/2.md',
           yamlKey: 'a.repo.dart.reg-exp',
           yamlValue: '[^0-9]+',
           matchValue: {
@@ -113,7 +117,7 @@ void main() {
           },
         ),
         CheckResult(
-          filePath: r'.\test\case1\posts\2.md',
+          filePath: './test/case1/posts/2.md',
           yamlKey: 'a.repo.reg-exp3',
           yamlValue: '[^0-9]+=+',
           matchValue: {
@@ -123,7 +127,7 @@ void main() {
           },
         ),
         CheckResult(
-          filePath: r'.\test\case1\posts\2.md',
+          filePath: './test/case1/posts/2.md',
           yamlKey: 'b.reg-exp3',
           yamlValue: '[^0-9]+=+',
           matchValue: {
@@ -133,35 +137,26 @@ void main() {
           },
         ),
       ];
-      final List<CheckResult> checkResultAll = await YamlVariableScanner.run(
+
+      final List<CheckResult> result = await YamlVariableScanner.run(
         './test/case1/yaml_variable_scanner.yaml',
         stdout,
         printMode: PrintMode.detailAndStats,
       );
-      expect(
-        checkResultAll
-            .map(
-              (value) => CheckResult(
-                filePath: value.filePath.replaceAll(r'\', '/'),
-                yamlKey: value.yamlKey,
-                yamlValue: value.yamlValue,
-                matchValue: value.matchValue,
-              ),
-            )
-            .toList()
-          ..sort((a, b) => a.hashCode.compareTo(b.hashCode)),
-        checkResultAllExpect
-            .map(
-              (value) => CheckResult(
-                filePath: value.filePath.replaceAll(r'\', '/'),
-                yamlKey: value.yamlKey,
-                yamlValue: value.yamlValue,
-                matchValue: value.matchValue,
-              ),
-            )
-            .toList()
-          ..sort((a, b) => a.hashCode.compareTo(b.hashCode)),
-      );
+
+      /// Normalise path separators so the expectations stay platform-independent
+      /// (glob yields `\` on Windows, `/` elsewhere).
+      final List<CheckResult> actual = [
+        for (final CheckResult r in result)
+          CheckResult(
+            filePath: r.filePath.replaceAll(r'\', '/'),
+            yamlKey: r.yamlKey,
+            yamlValue: r.yamlValue,
+            matchValue: r.matchValue,
+          ),
+      ];
+
+      expect(actual, unorderedEquals(expected));
     });
   });
 }
