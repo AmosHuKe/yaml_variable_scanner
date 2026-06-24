@@ -5,16 +5,16 @@
 
 ## 0.1.0
 
-### Breaking
+**Breaking changes**
 
 - Trim the public API: now exports only `YamlVariableScanner`, `PrintMode`, and the model types.
 
-### Improvements
+**Improvements**
 
 - Faster scanning: read each file once, cache compiled `RegExp`/`Glob`, 
   pre-compute ignore ranges per file, and scan files concurrently.
 
-### Fixes
+**Fixes**
 
 - Skip unreadable files instead of scanning partial content.
 - Validate config with clear `FormatException`s.
@@ -23,43 +23,43 @@ PR: [#8](https://github.com/AmosHuKe/yaml_variable_scanner/pull/8)
 
 ## 0.0.7
 
-### Improvements
+**Improvements**
 
 - Bump the packages.
 
 ## 0.0.6
 
-### Improvements
+**Improvements**
 
 - Update dev_dependencies version.
 - Improve code formatting.
 
 ## 0.0.5
 
-### Improvements
+**Improvements**
 
 - Update README and example.
 
 ## 0.0.4
 
-### New features
+**New features**
 
 - Add console print mode.
 
-### Improvements
+**Improvements**
 
 - Improve console print (e.g. suggestion).
 
 ## 0.0.3
 
-### Improvements
+**Improvements**
 
 - Improve basic statistics.
 - Remove console print loading.
 
 ## 0.0.2
 
-### Improvements
+**Improvements**
 
 - Move the `prefix` configuration to `yaml_variable_scanner.yaml`.
 
