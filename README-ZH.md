@@ -90,13 +90,13 @@ $ dart run example check
 使用 Flutter 运行以下指令，  
 
 ```sh
-$ dart pub add yaml_variable_scanner
+$ dart pub add dev:yaml_variable_scanner
 ```
 
-或手动将 `yaml_variable_scanner` 添加到 `pubspec.yaml` 依赖项中。  
+或手动将 `yaml_variable_scanner` 添加到 `pubspec.yaml` dev_dependencies 中。  
 
 ```yaml
-dependencies:
+dev_dependencies:
   yaml_variable_scanner: ^latest_version
 ```
 

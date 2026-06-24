@@ -90,13 +90,13 @@ $ dart run example check
 Run this command with Flutter,  
 
 ```sh
-$ dart pub add yaml_variable_scanner
+$ dart pub add dev:yaml_variable_scanner
 ```
 
-or add `yaml_variable_scanner` to `pubspec.yaml` dependencies manually.  
+or add `yaml_variable_scanner` to `pubspec.yaml` dev_dependencies manually.  
 
 ```yaml
-dependencies:
+dev_dependencies:
   yaml_variable_scanner: ^latest_version
 ```
 
