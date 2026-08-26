@@ -29,11 +29,12 @@ jobs:
     name: "Code Analysis :: Dart (latest)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
         with:
+          persist-credentials: false
           sparse-checkout: ${{ env.repo_sparse_checkout }}
           sparse-checkout-cone-mode: false
-      - uses: dart-lang/setup-dart@7654d458321ee25acccccfdb86cd48bd95768ff1
+      - uses: dart-lang/setup-dart@7654d458321ee25acccccfdb86cd48bd95768ff1 #v1.8.0
         with:
           sdk: 'stable'
       - name: Prepare dependencies
@@ -60,11 +61,12 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         sdk: [3.3.0, stable]
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
         with:
+          persist-credentials: false
           sparse-checkout: ${{ env.repo_sparse_checkout }}
           sparse-checkout-cone-mode: false
-      - uses: dart-lang/setup-dart@7654d458321ee25acccccfdb86cd48bd95768ff1
+      - uses: dart-lang/setup-dart@7654d458321ee25acccccfdb86cd48bd95768ff1 #v1.8.0
         with:
           sdk: ${{ matrix.sdk }}
       - name: Prepare dependencies
